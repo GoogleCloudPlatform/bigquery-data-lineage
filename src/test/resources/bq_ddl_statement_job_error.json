@@ -1,0 +1,83 @@
+{
+  "protoPayload": {
+    "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+    "status": {
+      "code": 3,
+      "message": "INVALID_ARGUMENT"
+    },
+    "authenticationInfo": {
+      "principalEmail": "user@example.com"
+    },
+    "requestMetadata": {
+      "callerIp": "103.252.203.237",
+      "callerSuppliedUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36,gzip(gfe)",
+      "requestAttributes": {},
+      "destinationAttributes": {}
+    },
+    "serviceName": "bigquery.googleapis.com",
+    "methodName": "google.cloud.bigquery.v2.JobService.InsertJob",
+    "authorizationInfo": [
+      {
+        "resource": "projects/bq-lineage-demo",
+        "permission": "bigquery.jobs.create",
+        "granted": true,
+        "resourceAttributes": {}
+      }
+    ],
+    "resourceName": "projects/bq-lineage-demo/jobs/bquxjob_5d2315bc_171f0269909",
+    "metadata": {
+      "@type": "type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata",
+      "jobChange": {
+        "after": "DONE",
+        "job": {
+          "jobConfig": {
+            "queryConfig": {
+              "query": "CREATE OR REPLACE TABLE `MyDataSet.test_partition2`\nAS\nSELECT\n *\nFROM `MyDataSet.test_partition` \nLIMIT 1000\n\nCREATE OR REPLACE TABLE `MyDataSet.test_partition3`\nAS\nSELECT\n timestamp,\n partner_id,\n advertiser_id\nFROM `myproject.demo.transactions`\nLIMIT 1000",
+              "createDisposition": "CREATE_IF_NEEDED",
+              "priority": "QUERY_INTERACTIVE",
+              "writeDisposition": "WRITE_EMPTY"
+            },
+            "type": "QUERY"
+          },
+          "jobStatus": {
+            "errors": [
+              {
+                "message": "Syntax error: Unexpected keyword CREATE at [8:1]",
+                "code": 3
+              }
+            ],
+            "errorResult": {
+              "code": 3,
+              "message": "Syntax error: Unexpected keyword CREATE at [8:1]"
+            },
+            "jobState": "DONE"
+          },
+          "jobStats": {
+            "startTime": "2020-05-07T17:20:02.272Z",
+            "queryStats": {},
+            "createTime": "2020-05-07T17:20:02.135Z",
+            "endTime": "2020-05-07T17:20:02.272Z"
+          },
+          "jobName": "projects/bq-lineage-demo/jobs/bquxjob_5d2315bc_171f0269909"
+        }
+      }
+    }
+  },
+  "insertId": "5u6x9ue132jt",
+  "resource": {
+    "type": "bigquery_project",
+    "labels": {
+      "project_id": "bq-lineage-demo",
+      "location": "US"
+    }
+  },
+  "timestamp": "2020-05-07T17:20:02.448Z",
+  "severity": "ERROR",
+  "logName": "projects/bq-lineage-demo/logs/cloudaudit.googleapis.com%2Fdata_access",
+  "operation": {
+    "id": "1588872002135-bq-lineage-demo:bquxjob_5d2315bc_171f0269909",
+    "producer": "bigquery.googleapis.com",
+    "last": true
+  },
+  "receiveTimestamp": "2020-05-07T17:20:02.607002736Z"
+}

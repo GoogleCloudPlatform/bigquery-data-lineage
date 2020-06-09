@@ -1,0 +1,70 @@
+{
+  "kind": "bigquery#table",
+  "id": "demoProject:demo.CorePii",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/demoProject/datasets/demo/tables/CorePii",
+  "tableReference": {
+    "projectId": "demoProject",
+    "datasetId": "demo",
+    "tableId": "CorePii"
+  },
+  "schema": {
+    "fields": [
+      {
+        "name": "partner_phone_number",
+        "type": "STRING",
+        "mode": "NULLABLE",
+        "policyTags": {
+          "names": [
+            "projects/GovernanceProject/locations/us/taxonomies/8150274556907504807/policyTags/1234"
+          ]
+        }
+      },
+      {
+        "name": "partner_id",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "partner_name",
+        "type": "STRING",
+        "mode": "NULLABLE",
+        "policyTags": {
+          "names": [
+            "projects/GovernanceProject/locations/us/taxonomies/8150274556907504807/policyTags/7890"
+          ]
+        }
+      },
+      {
+        "name": "hit_timestamp",
+        "type": "TIMESTAMP",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "conversion_type",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "num_products",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "num_hits",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "matched_tag_count",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "is_matched_product",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      }
+    ]
+  },
+  "type": "TABLE"
+}

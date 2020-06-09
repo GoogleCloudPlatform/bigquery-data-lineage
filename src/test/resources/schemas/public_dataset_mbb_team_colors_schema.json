@@ -1,0 +1,43 @@
+{
+  "kind": "bigquery#table",
+  "etag": "6ts/A4Iuhza8C7naNAHI0Q==",
+  "id": "bigquery-public-data:ncaa_basketball.team_colors",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/bigquery-public-data/datasets/ncaa_basketball/tables/team_colors",
+  "tableReference": {
+    "projectId": "bigquery-public-data",
+    "datasetId": "ncaa_basketball",
+    "tableId": "team_colors"
+  },
+  "description": "Hex color codes for the 351 current men's D1 basketball teams.",
+  "schema": {
+    "fields": [
+      {
+        "name": "market",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "id",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "code_ncaa",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "color",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      }
+    ]
+  },
+  "numBytes": "23909",
+  "numLongTermBytes": "23909",
+  "numRows": "351",
+  "creationTime": "1520301383660",
+  "lastModifiedTime": "1527778180427",
+  "type": "TABLE",
+  "location": "US"
+}

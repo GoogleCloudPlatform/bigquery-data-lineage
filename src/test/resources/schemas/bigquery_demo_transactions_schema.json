@@ -1,0 +1,94 @@
+{
+  "kind": "bigquery#table",
+  "etag": "I+jiUp/Ro6l5L+O7Jvm1Hw==",
+  "id": "myproject:demo.transactions",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/myproject/datasets/demo/tables/transactions",
+  "tableReference": {
+    "projectId": "myproject",
+    "datasetId": "demo",
+    "tableId": "transactions"
+  },
+  "schema": {
+    "fields": [
+      {
+        "name": "timestamp",
+        "type": "TIMESTAMP",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "partner_id",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "advertiser_id",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "event_name",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "user_id",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "user_id_type",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "order_id",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "products",
+        "type": "RECORD",
+        "mode": "REPEATED",
+        "fields": [
+          {
+            "name": "id",
+            "type": "STRING",
+            "mode": "NULLABLE"
+          },
+          {
+            "name": "name",
+            "type": "STRING",
+            "mode": "NULLABLE"
+          },
+          {
+            "name": "seller",
+            "type": "STRING",
+            "mode": "NULLABLE"
+          },
+          {
+            "name": "quantity",
+            "type": "INTEGER",
+            "mode": "NULLABLE"
+          },
+          {
+            "name": "value",
+            "type": "FLOAT",
+            "mode": "NULLABLE"
+          },
+          {
+            "name": "currency",
+            "type": "STRING",
+            "mode": "NULLABLE"
+          }
+        ]
+      }
+    ]
+  },
+  "numBytes": "2996364119",
+  "numLongTermBytes": "0",
+  "numRows": "13771407",
+  "creationTime": "1587043107502",
+  "lastModifiedTime": "1587043928108",
+  "type": "TABLE",
+  "location": "US"
+}

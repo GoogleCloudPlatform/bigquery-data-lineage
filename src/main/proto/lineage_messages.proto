@@ -1,0 +1,57 @@
+syntax = "proto3";
+package com.google.cloud.solutions.datalineage.model;
+
+message CompositeLineage {
+  uint64 reconcileTime = 1;
+  JobInformation jobInformation = 2;
+  TableLineage tableLineage = 5;
+  repeated ColumnLineage columnsLineage = 10;
+}
+
+message JobInformation {
+  string jobId = 1;
+  uint64 jobTime = 2;
+  string jobType = 5;
+  string actuator = 10;
+}
+
+message TableLineage {
+  DataEntity target = 1;
+  string operation = 2;
+  repeated DataEntity parents = 5;
+}
+
+message ColumnLineage {
+  ColumnEntity target = 1;
+  repeated string operations = 2;
+  repeated ColumnEntity parents = 5;
+}
+
+message DataEntity {
+  enum DataEntityTypes {
+    UNKNOWN = 0;
+    QUERY_LEVEL_TABLE = 1;
+    CLOUD_STORAGE_FILE = 5;
+    BIGQUERY_TABLE = 10;
+  }
+
+  DataEntityTypes kind = 1;
+  string sqlResource = 2;
+  string linkedResource = 3;
+}
+
+
+message ColumnEntity {
+  DataEntity table = 1;
+  string column = 2;
+}
+
+message TargetPolicyTags {
+  DataEntity table = 1;
+  repeated ColumnPolicyTags policyTags = 5;
+}
+
+message ColumnPolicyTags {
+  string column = 1;
+  repeated string policyTagIds = 2;
+}

@@ -1,0 +1,25 @@
+{
+  "kind": "bigquery#table",
+  "id": "demoProject:demo.SensitiveData",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/demoProject/datasets/demo/tables/SensitiveData",
+  "tableReference": {
+    "projectId": "demoProject",
+    "datasetId": "demo",
+    "tableId": "SensitiveData"
+  },
+  "schema": {
+    "fields": [
+      {
+        "name": "sensitive_data",
+        "type": "STRING",
+        "mode": "NULLABLE",
+        "policyTags": {
+          "names": [
+            "projects/GovernanceProject/locations/us/taxonomies/8150274556907504807/policyTags/7890"
+          ]
+        }
+      }
+    ]
+  },
+  "type": "TABLE"
+}

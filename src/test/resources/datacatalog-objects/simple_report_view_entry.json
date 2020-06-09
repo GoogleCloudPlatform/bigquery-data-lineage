@@ -1,0 +1,56 @@
+{
+  "name": "projects/myproject1/locations/us/entryGroups/@bigquery/entries/simpleReportViewId",
+  "type": "TABLE",
+  "schema": {
+    "columns": [
+      {
+        "type": "STRING",
+        "mode": "NULLABLE",
+        "column": "telephone_number"
+      },
+      {
+        "type": "INT64",
+        "mode": "NULLABLE",
+        "column": "statusCode"
+      },
+      {
+        "type": "STRING",
+        "mode": "NULLABLE",
+        "column": "entityId"
+      },
+      {
+        "type": "STRING",
+        "mode": "NULLABLE",
+        "column": "operation_type"
+      },
+      {
+        "type": "STRING",
+        "mode": "NULLABLE",
+        "column": "entity_type"
+      },
+      {
+        "type": "INT64",
+        "mode": "NULLABLE",
+        "column": "num_requests"
+      },
+      {
+        "type": "STRING",
+        "mode": "NULLABLE",
+        "column": "url"
+      }
+    ]
+  },
+  "sourceSystemTimestamps": {
+    "createTime": "2018-10-30T12:58:25.099Z",
+    "updateTime": "2018-10-30T13:00:22.480Z",
+    "expireTime": "1970-01-01T00:00:00Z"
+  },
+  "linkedResource": "//bigquery.googleapis.com/projects/myproject1/datasets/reporting/tables/simple_report_view",
+  "bigqueryTableSpec": {
+    "tableSourceType": "BIGQUERY_VIEW",
+    "viewSpec": {
+      "viewQuery": "SELECT\nmmddhh,\nstatusCode,\nregexp_extract(url, r\"(\\d+)$\") entityId,\ncase when url contains \"/cron/sync\" then \"SHEET_SYNC\"\nwhen url contains \"/conversion/partner\" then \"WEB_CONVERSION\"\nwhen url contains \"/conversion/app/partner\" then \"APP_CONVERSION\"\nelse \"UNKNOWN\" end as operation_type,\n\ncase when url contains \"/advertiser\" then \"ADVERTISER\"\nwhen url contains \"/partner\" then \"PARTNER\"\nelse \"UNKNOWN\" end as entity_type,\n\nnum_requests,\nurl\n\nFROM (\nSELECT \nSTRFTIME_UTC_USEC(TIMESTAMP, \"%m/%d-%H\") mmddhh,\nhttpRequest.status statusCode,\nregexp_extract(protoPayload.resource,r\"^([^\\?]+)\") url, \ncount(*) num_requests\nFROM \ntable_date_range([myproject1:app_engine_logs.appengine_googleapis_com_request_log_],date_add(current_timestamp(),-1, 'DAY'),date_add(current_timestamp(),-1, 'DAY')) \ngroup by mmddhh,statusCode, url order by mmddhh, statusCode)"
+    }
+  },
+  "integratedSystem": "BIGQUERY"
+}

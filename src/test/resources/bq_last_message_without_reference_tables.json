@@ -1,0 +1,75 @@
+{
+  "insertId": "dlqzgme4yiej",
+  "logName": "projects/myproject/logs/cloudaudit.googleapis.com%2Fdata_access",
+  "operation": {
+    "id": "1586786226701-myproject:bquxjob_4103dfda_17173ccc9a4",
+    "last": true,
+    "producer": "bigquery.googleapis.com"
+  },
+  "protoPayload": {
+    "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+    "authenticationInfo": {
+      "principalEmail": "user@example.com"
+    },
+    "authorizationInfo": [
+      {
+        "granted": true,
+        "permission": "bigquery.jobs.create",
+        "resource": "projects/myproject"
+      }
+    ],
+    "metadata": {
+      "@type": "type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata",
+      "jobChange": {
+        "after": "DONE",
+        "job": {
+          "jobConfig": {
+            "queryConfig": {
+              "createDisposition": "CREATE_IF_NEEDED",
+              "destinationTable": "projects/myproject/datasets/demo/tables/sample_table",
+              "priority": "QUERY_INTERACTIVE",
+              "query": "SELECT * FROM `myproject.demo.events` LIMIT 10",
+              "statementType": "SELECT",
+              "writeDisposition": "WRITE_TRUNCATE"
+            },
+            "type": "QUERY"
+          },
+          "jobName": "projects/myproject/jobs/bquxjob_4103dfda_17173ccc9a4",
+          "jobStats": {
+            "createTime": "2020-04-13T13:57:06.701Z",
+            "endTime": "2020-04-13T13:57:08.123Z",
+            "queryStats": {
+              "billingTier": 1,
+              "outputRowCount": "10",
+              "totalBilledBytes": "31206670336",
+              "totalProcessedBytes": "31206297408"
+            },
+            "startTime": "2020-04-13T13:57:06.859Z",
+            "totalSlotMs": "3888"
+          },
+          "jobStatus": {
+            "jobState": "DONE"
+          }
+        }
+      }
+    },
+    "methodName": "google.cloud.bigquery.v2.JobService.InsertJob",
+    "requestMetadata": {
+      "callerIp": "103.6.151.111",
+      "callerSuppliedUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36,gzip(gfe)"
+    },
+    "resourceName": "projects/myproject/jobs/bquxjob_4103dfda_17173ccc9a4",
+    "serviceName": "bigquery.googleapis.com",
+    "status": {}
+  },
+  "receiveTimestamp": "2020-04-13T13:57:08.945153619Z",
+  "resource": {
+    "labels": {
+      "location": "US",
+      "project_id": "myproject"
+    },
+    "type": "bigquery_project"
+  },
+  "severity": "INFO",
+  "timestamp": "2020-04-13T13:57:08.14Z"
+}

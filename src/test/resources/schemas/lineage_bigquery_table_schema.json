@@ -1,0 +1,141 @@
+{
+  "fields": [
+    {
+      "name": "lineageReconcileTime",
+      "type": "TIMESTAMP",
+      "mode": "REQUIRED",
+      "description": "The time lineage was processed in UTC"
+    },
+    {
+      "name": "item",
+      "type": "RECORD",
+      "mode": "REQUIRED",
+      "description": "The entity changed or added",
+      "fields": [
+        {
+          "name": "type",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": "The type of entity e.g. BIGQUERY_TABLE"
+        },
+        {
+          "name": "entity",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": "The BigQuery entity changed or added."
+        }
+      ]
+    },
+    {
+      "name": "jobInformation",
+      "type": "RECORD",
+      "mode": "NULLABLE",
+      "description": "BigQuery Job information",
+      "fields": [
+        {
+          "name": "lastUpdated",
+          "type": "TIMESTAMP",
+          "mode": "REQUIRED",
+          "description": "Job completion time in UTC"
+        },
+        {
+          "name": "actuator",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": "The email address of the authorized executor of Job, It can be a person or a service account."
+        },
+        {
+          "name": "causalJobId",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": "The BigQuery/Operation Job Id which made the change to the table."
+        }
+      ]
+    },
+    {
+      "name": "tableLineage",
+      "type": "RECORD",
+      "mode": "REQUIRED",
+      "description": "Table level information",
+      "fields": [
+        {
+          "name": "parents",
+          "type": "RECORD",
+          "mode": "REPEATED",
+          "description": "The tables which were read for generating/updating the source table.",
+          "fields": [
+            {
+              "name": "type",
+              "type": "STRING",
+              "mode": "NULLABLE",
+              "description": "type of DataEntity e.g CLOUD_STORAGE, BIGQUERY_TABLE"
+            },
+            {
+              "name": "entity",
+              "type": "STRING",
+              "mode": "NULLABLE",
+              "description": "The BigQuery Job type e.g. QUERY, COPY, IMPORT"
+            }
+          ]
+        },
+        {
+          "name": "operation",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": "The BigQuery Job type e.g. QUERY, COPY, IMPORT"
+        }
+      ]
+    },
+    {
+      "name": "columnLineage",
+      "type": "RECORD",
+      "mode": "REPEATED",
+      "description": "Column Level lineage if its a QUERY type operation",
+      "fields": [
+        {
+          "name": "name",
+          "type": "STRING",
+          "mode": "NULLABLE"
+        },
+        {
+          "name": "operation",
+          "type": "STRING",
+          "mode": "REPEATED",
+          "description": "List of Functions/Operations done on the source columns"
+        },
+        {
+          "name": "parents",
+          "type": "RECORD",
+          "mode": "REPEATED",
+          "description": "The source columns used to compute this column",
+          "fields": [
+            {
+              "name": "table",
+              "type": "RECORD",
+              "mode": "NULLABLE",
+              "fields": [
+                {
+                  "name": "type",
+                  "type": "STRING",
+                  "mode": "NULLABLE",
+                  "description": "type of DataEntity e.g CLOUD_STORAGE, BIGQUERY_TABLE"
+                },
+                {
+                  "name": "entity",
+                  "type": "STRING",
+                  "mode": "NULLABLE",
+                  "description": "The BigQuery Job type e.g. QUERY, COPY, IMPORT"
+                }
+              ]
+            },
+            {
+              "name": "column",
+              "type": "STRING",
+              "mode": "NULLABLE"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

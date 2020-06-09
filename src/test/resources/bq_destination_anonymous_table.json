@@ -1,0 +1,78 @@
+{
+  "protoPayload": {
+    "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+    "status": {},
+    "authenticationInfo": {
+      "principalEmail": "fakeskimo@blueseagulls.com"
+    },
+    "requestMetadata": {
+      "callerIp": "121.141.88.187",
+      "callerSuppliedUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36,gzip(gfe)"
+    },
+    "serviceName": "bigquery.googleapis.com",
+    "methodName": "google.cloud.bigquery.v2.JobService.InsertJob",
+    "authorizationInfo": [
+      {
+        "resource": "projects/helical-client-276602",
+        "permission": "bigquery.jobs.create",
+        "granted": true
+      }
+    ],
+    "resourceName": "projects/helical-client-276602/jobs/bquxjob_48ad95ff_171f28966f3",
+    "metadata": {
+      "jobChange": {
+        "after": "DONE",
+        "job": {
+          "jobName": "projects/helical-client-276602/jobs/bquxjob_48ad95ff_171f28966f3",
+          "jobConfig": {
+            "type": "QUERY",
+            "queryConfig": {
+              "query": "SELECT * FROM `helical-client-276602.airports.airports` WHERE tz like '%Asia%'",
+              "destinationTable": "projects/helical-client-276602/datasets/_68f0ba0f164ce5d88eda8e65409d77a4365c4b84/tables/anon4656e82b3ec523a4acf2a3d231ba8db110c81f21",
+              "createDisposition": "CREATE_IF_NEEDED",
+              "writeDisposition": "WRITE_TRUNCATE",
+              "priority": "QUERY_INTERACTIVE",
+              "statementType": "SELECT"
+            }
+          },
+          "jobStatus": {
+            "jobState": "DONE"
+          },
+          "jobStats": {
+            "createTime": "2020-05-08T04:27:27.726Z",
+            "startTime": "2020-05-08T04:27:27.975Z",
+            "endTime": "2020-05-08T04:27:28.253Z",
+            "queryStats": {
+              "totalProcessedBytes": "587978",
+              "totalBilledBytes": "10485760",
+              "billingTier": 1,
+              "referencedTables": [
+                "projects/helical-client-276602/datasets/airports/tables/airports"
+              ],
+              "outputRowCount": "821"
+            },
+            "totalSlotMs": "87"
+          }
+        }
+      },
+      "@type": "type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
+    }
+  },
+  "insertId": "3bwlegdjsdo",
+  "resource": {
+    "type": "bigquery_project",
+    "labels": {
+      "project_id": "helical-client-276602",
+      "location": "US"
+    }
+  },
+  "timestamp": "2020-05-08T04:27:28.275Z",
+  "severity": "INFO",
+  "logName": "projects/helical-client-276602/logs/cloudaudit.googleapis.com%2Fdata_access",
+  "operation": {
+    "id": "1588912047726-helical-client-276602:bquxjob_48ad95ff_171f28966f3",
+    "producer": "bigquery.googleapis.com",
+    "last": true
+  },
+  "receiveTimestamp": "2020-05-08T04:27:28.593900726Z"
+}

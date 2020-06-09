@@ -1,0 +1,26 @@
+{
+  "kind": "bigquery#table",
+  "id": "project2:datasetB.TableB",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/myproject/datasets/reporting/tables/daily_report",
+  "tableReference": {
+    "projectId": "project2",
+    "datasetId": "datasetB",
+    "tableId": "TableB"
+  },
+  "schema": {
+    "fields": [
+      {
+        "name": "colB",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "colC",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      }
+    ]
+  },
+  "type": "TABLE",
+  "location": "US"
+}

@@ -1,0 +1,48 @@
+{
+  "name": "projects/myproject1/locations/us/entryGroups/@bigquery/entries/TableAId",
+  "type": "TABLE",
+  "schema": {
+    "columns": [
+      {
+        "type": "TIMESTAMP",
+        "mode": "NULLABLE",
+        "column": "transaction_time"
+      },
+      {
+        "type": "INT64",
+        "mode": "NULLABLE",
+        "column": "keyid"
+      },
+      {
+        "type": "DOUBLE",
+        "mode": "NULLABLE",
+        "column": "lat"
+      },
+      {
+        "type": "DOUBLE",
+        "mode": "NULLABLE",
+        "column": "lon"
+      },
+      {
+        "type": "INT64",
+        "mode": "NULLABLE",
+        "column": "id"
+      },
+      {
+        "type": "INT64",
+        "mode": "NULLABLE",
+        "column": "bucket"
+      }
+    ]
+  },
+  "sourceSystemTimestamps": {
+    "createTime": "2019-11-05T06:10:22.137Z",
+    "updateTime": "2019-11-05T06:10:22.137Z",
+    "expireTime": "1970-01-01T00:00:00Z"
+  },
+  "linkedResource": "//bigquery.googleapis.com/projects/myproject1/datasets/mydataset1/tables/TableA",
+  "bigqueryTableSpec": {
+    "tableSourceType": "BIGQUERY_TABLE"
+  },
+  "integratedSystem": "BIGQUERY"
+}

@@ -1,0 +1,5 @@
+--field=id=jobTime,display-name="Entity change timestamp",type=timestamp,required=TRUE \
+--field=id=reconcileTime,display-name="Lineage processed timestamp",type=timestamp,required=TRUE \
+--field=id=actuator,display-name="The email address of the authorized executor of Job which can be a person or a service account",type=string \
+--field=id=jobId,display-name="The BigQuery or Operation Job Id which made the change to the table",type=string \
+--field=id=parents,display-name="The tables which were read for generating this entity",type=string

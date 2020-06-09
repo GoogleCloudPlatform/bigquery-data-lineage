@@ -1,0 +1,73 @@
+{
+  "protoPayload": {
+    "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+    "status": {},
+    "authenticationInfo": {
+      "principalEmail": "user@example.com"
+    },
+    "requestMetadata": {
+      "callerIp": "103.252.203.237",
+      "callerSuppliedUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36,gzip(gfe)"
+    },
+    "serviceName": "bigquery.googleapis.com",
+    "methodName": "google.cloud.bigquery.v2.JobService.InsertJob",
+    "authorizationInfo": [
+      {
+        "resource": "projects/myproject",
+        "permission": "bigquery.jobs.create",
+        "granted": true
+      }
+    ],
+    "resourceName": "projects/myproject/jobs/bquxjob_264a99a3_171ef37d030",
+    "metadata": {
+      "jobChange": {
+        "after": "DONE",
+        "job": {
+          "jobName": "projects/myproject/jobs/bquxjob_264a99a3_171ef37d030",
+          "jobConfig": {
+            "type": "QUERY",
+            "queryConfig": {
+              "query": "CREATE OR REPLACE TABLE `demo.test_partition`\nPARTITION BY DATE(`timestamp`) AS\nSELECT\n'6' as id,\nPARSE_TIMESTAMP('%F','2020-04-12') as `timestamp`\n",
+              "destinationTable": "projects/myproject/datasets/demo/tables/test_partition",
+              "createDisposition": "CREATE_IF_NEEDED",
+              "writeDisposition": "WRITE_EMPTY",
+              "priority": "QUERY_INTERACTIVE",
+              "statementType": "CREATE_TABLE_AS_SELECT"
+            }
+          },
+          "jobStatus": {
+            "jobState": "DONE"
+          },
+          "jobStats": {
+            "createTime": "2020-05-07T12:59:29.193Z",
+            "startTime": "2020-05-07T12:59:29.391Z",
+            "endTime": "2020-05-07T12:59:30.443Z",
+            "queryStats": {
+              "billingTier": 1,
+              "outputRowCount": "1"
+            },
+            "totalSlotMs": "154"
+          }
+        }
+      },
+      "@type": "type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
+    }
+  },
+  "insertId": "-dkyxl7dw47h",
+  "resource": {
+    "type": "bigquery_project",
+    "labels": {
+      "location": "US",
+      "project_id": "myproject"
+    }
+  },
+  "timestamp": "2020-05-07T12:59:30.463Z",
+  "severity": "INFO",
+  "logName": "projects/myproject/logs/cloudaudit.googleapis.com%2Fdata_access",
+  "operation": {
+    "id": "1588856369193-myproject:bquxjob_264a99a3_171ef37d030",
+    "producer": "bigquery.googleapis.com",
+    "last": true
+  },
+  "receiveTimestamp": "2020-05-07T12:59:30.641940960Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "myproject:dataset.table",
+  "tableReference": {
+    "projectId": "myproject",
+    "datasetId": "dataset",
+    "tableId": "table"
+  },
+  "schema": {
+    "fields": [
+      {
+        "mode": "NULLABLE",
+        "name": "afloat",
+        "type": "FLOAT"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aString",
+        "type": "STRING"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aInteger",
+        "type": "INTEGER"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aBool",
+        "type": "BOOLEAN"
+      }
+    ]
+  },
+  "type": "TABLE"
+}

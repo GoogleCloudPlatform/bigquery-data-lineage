@@ -1,0 +1,78 @@
+{
+  "protoPayload": {
+    "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+    "status": {},
+    "authenticationInfo": {
+      "principalEmail": "user@example.com"
+    },
+    "requestMetadata": {
+      "callerIp": "0.0.0.0",
+      "callerSuppliedUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36,gzip(gfe)"
+    },
+    "serviceName": "bigquery.googleapis.com",
+    "methodName": "google.cloud.bigquery.v2.JobService.InsertJob",
+    "authorizationInfo": [
+      {
+        "resource": "projects/bq-lineage-demo",
+        "permission": "bigquery.jobs.create",
+        "granted": true
+      }
+    ],
+    "resourceName": "projects/bq-lineage-demo/jobs/bquxjob_4288f388_1726f873d79",
+    "metadata": {
+      "jobChange": {
+        "after": "DONE",
+        "job": {
+          "jobName": "projects/bq-lineage-demo/jobs/bquxjob_4288f388_1726f873d79",
+          "jobConfig": {
+            "type": "QUERY",
+            "queryConfig": {
+              "query": "SELECT\n  partner_id,\n  partner_name,\n  partner_phone_number\nFROM\n  `bq-lineage-demo.MyDataSet.PartnerInformation`",
+              "destinationTable": "projects/bq-lineage-demo/datasets/MyDataSet/tables/ExtractedPartnerInformation",
+              "createDisposition": "CREATE_IF_NEEDED",
+              "writeDisposition": "WRITE_TRUNCATE",
+              "priority": "QUERY_INTERACTIVE",
+              "statementType": "SELECT"
+            }
+          },
+          "jobStatus": {
+            "jobState": "DONE"
+          },
+          "jobStats": {
+            "createTime": "2020-06-01T11:15:46.203Z",
+            "startTime": "2020-06-01T11:15:46.559Z",
+            "endTime": "2020-06-01T11:15:47.988Z",
+            "queryStats": {
+              "totalProcessedBytes": "0",
+              "totalBilledBytes": "0",
+              "billingTier": 1,
+              "referencedTables": [
+                "projects/bq-lineage-demo/datasets/MyDataSet/tables/PartnerInformation"
+              ],
+              "outputRowCount": "0"
+            },
+            "totalSlotMs": "1000"
+          }
+        }
+      },
+      "@type": "type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
+    }
+  },
+  "insertId": "-i0tieze2hyx3",
+  "resource": {
+    "type": "bigquery_project",
+    "labels": {
+      "project_id": "bq-lineage-demo",
+      "location": "US"
+    }
+  },
+  "timestamp": "2020-06-01T11:15:48.007Z",
+  "severity": "INFO",
+  "logName": "projects/bq-lineage-demo/logs/cloudaudit.googleapis.com%2Fdata_access",
+  "operation": {
+    "id": "1591010146203-bq-lineage-demo:bquxjob_4288f388_1726f873d79",
+    "producer": "bigquery.googleapis.com",
+    "last": true
+  },
+  "receiveTimestamp": "2020-06-01T11:15:48.357330048Z"
+}

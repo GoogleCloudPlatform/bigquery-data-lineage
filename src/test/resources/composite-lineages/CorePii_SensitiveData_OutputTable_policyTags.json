@@ -1,0 +1,61 @@
+{
+  "tableLineage": {
+    "target": {
+      "kind": "BIGQUERY_TABLE",
+      "sqlResource": "bigquery.table.demoProject.demo.OutputTable",
+      "linkedResource": "//bigquery.googleapis.com/projects/demoProject/datasets/demo/tables/OutputTable"
+    },
+    "parents": [
+      {
+        "kind": "BIGQUERY_TABLE",
+        "sqlResource": "bigquery.table.demoProject.demo.CorePii",
+        "linkedResource": "//bigquery.googleapis.com/projects/demoProject/datasets/demo/tables/CorePii"
+      },
+      {
+        "kind": "BIGQUERY_TABLE",
+        "sqlResource": "bigquery.table.demoProject.demo.SensitiveData",
+        "linkedResource": "//bigquery.googleapis.com/projects/demoProject/datasets/demo/tables/SensitiveData"
+      }
+    ]
+  },
+  "columnsLineage": [
+    {
+      "target": {
+        "column": "combined_telephone"
+      },
+      "parents": [
+        {
+          "table": {
+            "kind": "BIGQUERY_TABLE",
+            "sqlResource": "bigquery.table.demoProject.demo.CorePii",
+            "linkedResource": "//bigquery.googleapis.com/projects/demoProject/datasets/demo/tables/CorePii"
+          },
+          "column": "partner_phone_number"
+        },
+        {
+          "table": {
+            "kind": "BIGQUERY_TABLE",
+            "sqlResource": "bigquery.table.demoProject.demo.SensitiveData",
+            "linkedResource": "//bigquery.googleapis.com/projects/demoProject/datasets/demo/tables/SensitiveData"
+          },
+          "column": "sensitive_data"
+        }
+      ]
+    },
+    {
+      "target": {
+        "column": "telephone_number"
+      },
+      "parents": [
+        {
+          "table": {
+            "kind": "BIGQUERY_TABLE",
+            "sqlResource": "bigquery.table.demoProject.demo.CorePii",
+            "linkedResource": "//bigquery.googleapis.com/projects/demoProject/datasets/demo/tables/CorePii"
+          },
+          "column": "partner_phone_number"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "kind": "bigquery#table",
+  "id": "bq-lineage-demo:MyDataSet.ExtractedPartnerInformation",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/bq-lineage-demo/datasets/MyDataSet/tables/ExtractedPartnerInformation",
+  "tableReference": {
+    "projectId": "bq-lineage-demo",
+    "datasetId": "MyDataSet",
+    "tableId": "ExtractedPartnerInformation"
+  },
+  "schema": {
+    "fields": [
+      {
+        "name": "partner_id",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "partner_name",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "partner_phone_number",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      }
+    ]
+  },
+  "type": "TABLE",
+  "location": "US"
+}

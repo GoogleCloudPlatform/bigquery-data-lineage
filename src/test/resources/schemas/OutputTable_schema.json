@@ -1,0 +1,45 @@
+{
+  "kind": "bigquery#table",
+  "id": "demoProject:demo.OutputTable",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/demoProject/datasets/demo/tables/OutputTable",
+  "tableReference": {
+    "projectId": "demoProject",
+    "datasetId": "demo",
+    "tableId": "OutputTable"
+  },
+  "schema": {
+    "fields": [
+      {
+        "type": "STRING",
+        "mode": "NULLABLE",
+        "name": "combined_telephone"
+      },
+      {
+        "type": "STRING",
+        "mode": "NULLABLE",
+        "name": "telephone_number"
+      },
+      {
+        "type": "DOUBLE",
+        "mode": "NULLABLE",
+        "name": "lat"
+      },
+      {
+        "type": "DOUBLE",
+        "mode": "NULLABLE",
+        "name": "lon"
+      },
+      {
+        "type": "INT64",
+        "mode": "NULLABLE",
+        "name": "id"
+      },
+      {
+        "type": "INT64",
+        "mode": "NULLABLE",
+        "name": "bucket"
+      }
+    ]
+  },
+  "type": "TABLE"
+}

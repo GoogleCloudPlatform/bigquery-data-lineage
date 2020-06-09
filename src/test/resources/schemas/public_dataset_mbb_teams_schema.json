@@ -1,0 +1,163 @@
+{
+  "kind": "bigquery#table",
+  "etag": "TTdR7J49Pxl6qLJjsXyGKA==",
+  "id": "bigquery-public-data:ncaa_basketball.mbb_teams",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/bigquery-public-data/datasets/ncaa_basketball/tables/mbb_teams",
+  "tableReference": {
+    "projectId": "bigquery-public-data",
+    "datasetId": "ncaa_basketball",
+    "tableId": "mbb_teams"
+  },
+  "description": "General information about the 351 current men's D1 basketball teams.",
+  "schema": {
+    "fields": [
+      {
+        "name": "market",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "alias",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "name",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "id",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "code_ncaa",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "kaggle_team_id",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "school_ncaa",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "turner_name",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "league_name",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "league_alias",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "league_id",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "conf_name",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "conf_alias",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "conf_id",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "division_name",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "division_alias",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "division_id",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "venue_id",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "venue_city",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "venue_state",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "venue_address",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "venue_zip",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "venue_country",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "venue_name",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "venue_capacity",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "logo_large",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "logo_medium",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "logo_small",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      }
+    ]
+  },
+  "numBytes": "230400",
+  "numLongTermBytes": "230400",
+  "numRows": "351",
+  "creationTime": "1520610568869",
+  "lastModifiedTime": "1527778126304",
+  "type": "TABLE",
+  "location": "US"
+}

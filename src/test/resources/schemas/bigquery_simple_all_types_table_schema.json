@@ -1,0 +1,68 @@
+{
+  "id": "myproject:dataset.table",
+  "tableReference": {
+    "projectId": "myproject",
+    "datasetId": "dataset",
+    "tableId": "table"
+  },
+  "schema": {
+    "fields": [
+      {
+        "mode": "NULLABLE",
+        "name": "afloat",
+        "type": "FLOAT"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aString",
+        "type": "STRING"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aInteger",
+        "type": "INTEGER"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aBool",
+        "type": "BOOLEAN"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aBytes",
+        "type": "BYTES"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aNumeric",
+        "type": "NUMERIC"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aTimestamp",
+        "type": "TIMESTAMP"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aDate",
+        "type": "DATE"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aTime",
+        "type": "TIME"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aDateTime",
+        "type": "DATETIME"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "aGeoPoint",
+        "type": "GEOGRAPHY"
+      }
+    ]
+  },
+  "type": "TABLE"
+}

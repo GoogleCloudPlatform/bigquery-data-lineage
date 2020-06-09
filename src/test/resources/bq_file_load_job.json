@@ -1,0 +1,79 @@
+{
+  "protoPayload": {
+    "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+    "status": {},
+    "authenticationInfo": {
+      "principalEmail": "user@example.com"
+    },
+    "requestMetadata": {
+      "callerIp": "103.252.203.237",
+      "callerSuppliedUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36,gzip(gfe)"
+    },
+    "serviceName": "bigquery.googleapis.com",
+    "methodName": "google.cloud.bigquery.v2.JobService.InsertJob",
+    "authorizationInfo": [
+      {
+        "resource": "projects/bq-lineage-demo",
+        "permission": "bigquery.jobs.create",
+        "granted": true
+      }
+    ],
+    "resourceName": "projects/bq-lineage-demo/jobs/bquxjob_718728d9_171f059e94d",
+    "metadata": {
+      "jobChange": {
+        "after": "DONE",
+        "job": {
+          "jobName": "projects/bq-lineage-demo/jobs/bquxjob_718728d9_171f059e94d",
+          "jobConfig": {
+            "type": "IMPORT",
+            "loadConfig": {
+              "sourceUris": [
+                "gs://lineage-dataflow-29173/userdata1.parquet"
+              ],
+              "schemaJson": "{\n}",
+              "destinationTable": "projects/bq-lineage-demo/datasets/MyDataSet/tables/UserData",
+              "createDisposition": "CREATE_IF_NEEDED",
+              "writeDisposition": "WRITE_EMPTY"
+            }
+          },
+          "jobStatus": {
+            "jobState": "DONE"
+          },
+          "jobStats": {
+            "createTime": "2020-05-07T18:15:56.989Z",
+            "startTime": "2020-05-07T18:15:57.729Z",
+            "endTime": "2020-05-07T18:16:03.887Z",
+            "loadStats": {
+              "totalOutputBytes": "141410"
+            },
+            "totalSlotMs": "1024",
+            "reservationUsage": [
+              {
+                "name": "default-pipeline",
+                "slotMs": "1024"
+              }
+            ]
+          }
+        }
+      },
+      "@type": "type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
+    }
+  },
+  "insertId": "-qwjerqe128r1",
+  "resource": {
+    "type": "bigquery_project",
+    "labels": {
+      "project_id": "bq-lineage-demo",
+      "location": "US"
+    }
+  },
+  "timestamp": "2020-05-07T18:16:03.906Z",
+  "severity": "INFO",
+  "logName": "projects/bq-lineage-demo/logs/cloudaudit.googleapis.com%2Fdata_access",
+  "operation": {
+    "id": "1588875356989-bq-lineage-demo:bquxjob_718728d9_171f059e94d",
+    "producer": "bigquery.googleapis.com",
+    "last": true
+  },
+  "receiveTimestamp": "2020-05-07T18:16:04.469891232Z"
+}

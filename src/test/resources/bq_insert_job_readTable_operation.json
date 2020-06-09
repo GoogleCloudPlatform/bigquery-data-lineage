@@ -1,0 +1,50 @@
+{
+  "insertId": "dlqzgme4yiep",
+  "logName": "projects/myproject/logs/cloudaudit.googleapis.com%2Fdata_access",
+  "protoPayload": {
+    "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+    "authenticationInfo": {
+      "principalEmail": "user@example.com"
+    },
+    "authorizationInfo": [
+      {
+        "granted": true,
+        "permission": "bigquery.tables.getData",
+        "resource": "projects/myproject/datasets/demo/tables/events"
+      }
+    ],
+    "metadata": {
+      "@type": "type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata",
+      "tableDataRead": {
+        "fields": [
+          "transaction_time",
+          "lon",
+          "id",
+          "bucket",
+          "lat",
+          "keyid"
+        ],
+        "jobName": "projects/myproject/jobs/bquxjob_4103dfda_17173ccc9a4",
+        "reason": "JOB"
+      }
+    },
+    "methodName": "google.cloud.bigquery.v2.JobService.InsertJob",
+    "requestMetadata": {
+      "callerIp": "103.6.151.111",
+      "callerSuppliedUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36,gzip(gfe)"
+    },
+    "resourceName": "projects/myproject/datasets/demo/tables/events",
+    "serviceName": "bigquery.googleapis.com",
+    "status": {}
+  },
+  "receiveTimestamp": "2020-04-13T13:57:08.945153619Z",
+  "resource": {
+    "labels": {
+      "dataset_id": "demo",
+      "project_id": "myproject"
+    },
+    "type": "bigquery_dataset"
+  },
+  "severity": "INFO",
+  "timestamp": "2020-04-13T13:57:08.141Z"
+}

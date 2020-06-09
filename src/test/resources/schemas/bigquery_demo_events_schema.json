@@ -1,0 +1,46 @@
+{
+  "kind": "bigquery#table",
+  "etag": "FnYOaTcOYbWI4hAWC+kwjA==",
+  "id": "myproject:demo.events",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/myproject/datasets/demo/tables/events",
+  "tableReference": {
+    "projectId": "myproject",
+    "datasetId": "demo",
+    "tableId": "events"
+  },
+  "schema": {
+    "fields": [
+      {
+        "name": "transaction_time",
+        "type": "TIMESTAMP"
+      },
+      {
+        "name": "keyid",
+        "type": "INTEGER"
+      },
+      {
+        "name": "lat",
+        "type": "FLOAT"
+      },
+      {
+        "name": "lon",
+        "type": "FLOAT"
+      },
+      {
+        "name": "id",
+        "type": "INTEGER"
+      },
+      {
+        "name": "bucket",
+        "type": "INTEGER"
+      }
+    ]
+  },
+  "numBytes": "31206297408",
+  "numLongTermBytes": "31206297408",
+  "numRows": "650131196",
+  "creationTime": "1572934222137",
+  "lastModifiedTime": "1572934222137",
+  "type": "TABLE",
+  "location": "US"
+}

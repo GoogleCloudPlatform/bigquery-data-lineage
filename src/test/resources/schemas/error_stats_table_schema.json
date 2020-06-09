@@ -1,0 +1,70 @@
+{
+  "kind": "bigquery#table",
+  "etag": "67ikpVxNRNgZ/qN3lzqfag==",
+  "id": "myproject:reporting.error_stats",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/myproject/datasets/reporting/tables/error_stats",
+  "tableReference": {
+    "projectId": "myproject",
+    "datasetId": "reporting",
+    "tableId": "error_stats"
+  },
+  "schema": {
+    "fields": [
+      {
+        "name": "partner_id",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "partner_name",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "hit_timestamp",
+        "type": "TIMESTAMP",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "conversion_type",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "num_hits",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "status_200",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "status_300",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "status_400",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "status_500",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      }
+    ]
+  },
+  "timePartitioning": {
+    "type": "DAY"
+  },
+  "numBytes": "338991985246",
+  "numLongTermBytes": "217579338469",
+  "numRows": "4647568034",
+  "creationTime": "1546166683743",
+  "lastModifiedTime": "1589587976402",
+  "type": "TABLE",
+  "location": "US"
+}

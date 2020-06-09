@@ -1,0 +1,43 @@
+{
+  "insertId": "dlqzgme4yie5",
+  "logName": "projects/myproject/logs/cloudaudit.googleapis.com%2Fdata_access",
+  "operation": {
+    "first": true,
+    "id": "1586786226701-myproject:bquxjob_4103dfda_17173ccc9a4",
+    "producer": "bigquery.googleapis.com"
+  },
+  "protoPayload": {
+    "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+    "authenticationInfo": {
+      "principalEmail": "user@example.com"
+    },
+    "authorizationInfo": [
+      {
+        "granted": true,
+        "permission": "bigquery.jobs.create",
+        "resource": "projects/myproject",
+        "resourceAttributes": {}
+      }
+    ],
+    "methodName": "google.cloud.bigquery.v2.JobService.InsertJob",
+    "requestMetadata": {
+      "callerIp": "103.6.151.111",
+      "callerSuppliedUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36,gzip(gfe)",
+      "destinationAttributes": {},
+      "requestAttributes": {}
+    },
+    "resourceName": "projects/myproject/jobs/bquxjob_4103dfda_17173ccc9a4",
+    "serviceName": "bigquery.googleapis.com",
+    "status": {}
+  },
+  "receiveTimestamp": "2020-04-13T13:57:07.204914639Z",
+  "resource": {
+    "labels": {
+      "location": "US",
+      "project_id": "myproject"
+    },
+    "type": "bigquery_project"
+  },
+  "severity": "INFO",
+  "timestamp": "2020-04-13T13:57:06.892Z"
+}

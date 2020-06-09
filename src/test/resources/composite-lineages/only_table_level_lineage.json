@@ -1,0 +1,23 @@
+{
+  "reconcileTime": "1586813374923",
+  "jobInformation": {
+    "jobId": "projects/myproject/jobs/bquxjob_4103dfda_17173ccc9a4",
+    "jobTime": "1586786228140",
+    "actuator": "user@example.com"
+  },
+  "tableLineage": {
+    "target": {
+      "kind": "BIGQUERY_TABLE",
+      "sqlResource": "bigquery.table.myproject.demo.sample_table",
+      "linkedResource": "//bigquery.googleapis.com/projects/myproject/datasets/demo/tables/sample_table"
+    },
+    "operation": "QUERY_JOB",
+    "parents": [
+      {
+        "kind": "BIGQUERY_TABLE",
+        "sqlResource": "bigquery.table.myproject.demo.events",
+        "linkedResource": "//bigquery.googleapis.com/projects/myproject/datasets/demo/tables/events"
+      }
+    ]
+  }
+}

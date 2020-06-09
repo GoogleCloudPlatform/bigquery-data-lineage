@@ -1,0 +1,99 @@
+{
+  "kind": "bigquery#table",
+  "etag": "btl8vEprHYEpyiYwf/WFQw==",
+  "id": "myproject:reporting.daily_report",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/myproject/datasets/reporting/tables/daily_report",
+  "tableReference": {
+    "projectId": "myproject",
+    "datasetId": "reporting",
+    "tableId": "daily_report"
+  },
+  "schema": {
+    "fields": [
+      {
+        "name": "hit_timestamp",
+        "type": "TIMESTAMP",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "partner_id",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "partner_name",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "products",
+        "type": "RECORD",
+        "mode": "REPEATED",
+        "fields": [
+          {
+            "name": "jsonError",
+            "type": "STRING",
+            "mode": "NULLABLE"
+          },
+          {
+            "name": "product",
+            "type": "RECORD",
+            "mode": "NULLABLE",
+            "fields": [
+              {
+                "name": "id",
+                "type": "STRING",
+                "mode": "NULLABLE"
+              },
+              {
+                "name": "name",
+                "type": "STRING",
+                "mode": "NULLABLE"
+              },
+              {
+                "name": "seller",
+                "type": "STRING",
+                "mode": "NULLABLE"
+              },
+              {
+                "name": "quantity",
+                "type": "STRING",
+                "mode": "NULLABLE"
+              },
+              {
+                "name": "value",
+                "type": "STRING",
+                "mode": "NULLABLE"
+              },
+              {
+                "name": "currency",
+                "type": "STRING",
+                "mode": "NULLABLE"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "latency",
+        "type": "FLOAT",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "is_ok",
+        "type": "BOOLEAN",
+        "mode": "NULLABLE"
+      }
+    ]
+  },
+  "timePartitioning": {
+    "type": "DAY"
+  },
+  "numBytes": "4243039242539",
+  "numLongTermBytes": "2756175095381",
+  "numRows": "4688903566",
+  "creationTime": "1544756481320",
+  "lastModifiedTime": "1589501539422",
+  "type": "TABLE",
+  "location": "US"
+}
