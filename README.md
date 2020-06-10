@@ -1,3 +1,5 @@
+![build](https://github.com/GoogleCloudPlatform/bigquery-data-lineage/workflows/build/badge.svg)
+
 ## BigQuery Data Lineage using Audit Logs, Pub/Sub, Dataflow and Data Catalog
 
 Enterprises’ data governance practices require tracking of all movement of sensitive data including Personally Identifiable Information (PII), also a key concern is to ensure that data including metadata stays within the customer’s Cloud Organisation or Project.
