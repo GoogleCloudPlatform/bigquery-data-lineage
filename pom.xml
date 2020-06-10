@@ -280,7 +280,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
-          <parallel>all</parallel>
+          <parallel>classes</parallel>
           <threadCount>4</threadCount>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
         </configuration>
