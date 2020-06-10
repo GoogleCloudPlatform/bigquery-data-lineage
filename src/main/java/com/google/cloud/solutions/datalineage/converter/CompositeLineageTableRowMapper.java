@@ -121,7 +121,7 @@ public final class CompositeLineageTableRowMapper {
   private static TableRow buildColumnLineage(ColumnLineage colLineage) {
     TableRow colLineageRow = new TableRow();
 
-    colLineageRow.set("target", buildColumnEntity(colLineage.getTarget()));
+    colLineageRow.set("target", new TableRow().set("column", colLineage.getTarget().getColumn()));
 
     if (colLineage.getOperationsCount() > 0) {
       colLineageRow.set("operations", colLineage.getOperationsList());
