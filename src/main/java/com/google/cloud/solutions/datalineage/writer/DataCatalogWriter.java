@@ -14,9 +14,8 @@
 
 package com.google.cloud.solutions.datalineage.writer;
 
-import com.google.cloud.datacatalog.v1beta1.DataCatalogClient;
 import com.google.cloud.solutions.datalineage.model.TagsForCatalog;
-import com.google.cloud.solutions.datalineage.service.DataCatalogService;
+import com.google.cloud.solutions.datalineage.service.CatalogTagsApplicator;
 import com.google.common.flogger.FluentLogger;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.PTransform;
@@ -39,9 +38,10 @@ public final class DataCatalogWriter extends
           @ProcessElement
           public void processLineageTag(@Element TagsForCatalog tagsForCatalog) {
             try {
-              DataCatalogService
-                  .using(DataCatalogClient.create())
-                  .applyEntityTags(tagsForCatalog.getEntryId(), tagsForCatalog.parsedTags());
+              CatalogTagsApplicator.builder()
+                  .forTags(tagsForCatalog.parsedTags())
+                  .build()
+                  .apply(tagsForCatalog.getEntryId());
             } catch (Exception exception) {
               logger.atWarning().every(100).withCause(exception)
                   .log("Error adding %s", tagsForCatalog);
@@ -49,5 +49,9 @@ public final class DataCatalogWriter extends
           }
         }
     ));
+  }
+
+  public static DataCatalogWriter newWriter() {
+    return new DataCatalogWriter();
   }
 }

@@ -14,8 +14,6 @@
 
 package com.google.cloud.solutions.datalineage.service;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-
 import com.google.cloud.datacatalog.v1beta1.DataCatalogClient;
 import com.google.cloud.datacatalog.v1beta1.DataCatalogClient.ListTagsPage;
 import com.google.cloud.datacatalog.v1beta1.Entry;
@@ -24,7 +22,6 @@ import com.google.cloud.datacatalog.v1beta1.Tag;
 import com.google.cloud.datacatalog.v1beta1.stub.DataCatalogStub;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.DataEntity;
 import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.flogger.FluentLogger;
 import com.google.protobuf.FieldMask;
@@ -50,38 +47,23 @@ public class DataCatalogService {
     this.dataCatalogClient = dataCatalogClient;
   }
 
+  /**
+   * Convenience Factory for building an instance Data Catalog service using provided Client.
+   */
   public static DataCatalogService using(DataCatalogClient catalogClient) {
     return new DataCatalogService(catalogClient);
   }
 
+  /**
+   * Convenience Factory for building an instance Data Catalog service using provided Stub. Creates
+   * using a standard client if stub is null.
+   */
   public static DataCatalogService usingStub(DataCatalogStub catalogStub) throws IOException {
     return using(
         (catalogStub == null) ?
             DataCatalogClient.create() :
             DataCatalogClient.create(catalogStub));
   }
-
-  public void applyEntityTags(String entryId, Collection<Tag> tags) {
-    ImmutableSet<String> lookupTagTemplateIds =
-        tags.stream()
-            .map(Tag::getTemplate)
-            .collect(toImmutableSet());
-
-    ImmutableTable<String, String, Tag> existingTags = lookUpTags(entryId, lookupTagTemplateIds);
-
-    tags.forEach
-        (tag -> {
-              String col = tag.getColumn();
-
-              if (existingTags.contains(tag.getTemplate(), col)) {
-                updateTag(existingTags.get(tag.getTemplate(), col), tag);
-              } else {
-                createTag(entryId, tag);
-              }
-            }
-        );
-  }
-
 
   public Tag updateTag(Tag existingTag, Tag newTag) {
     logger.atInfo().atMostEvery(30, TimeUnit.SECONDS)
@@ -112,21 +94,21 @@ public class DataCatalogService {
     }
   }
 
-  public ImmutableTable<String, String, Tag> lookUpTags(
+  public ImmutableTable<String, String, Tag> lookUpTagsForTemplateIds(
       DataEntity entity,
       ImmutableCollection<String> lookUpTemplateIds) {
     return lookupEntry(entity)
-        .map(entry -> lookUpTags(entry, lookUpTemplateIds))
+        .map(entry -> lookUpTagsForTemplateIds(entry, lookUpTemplateIds))
         .orElseGet(ImmutableTable::of);
   }
 
-  public ImmutableTable<String, String, Tag> lookUpTags(
+  public ImmutableTable<String, String, Tag> lookUpTagsForTemplateIds(
       Entry tableEntry,
       ImmutableCollection<String> lookUpTemplateIds) {
-    return lookUpTags(tableEntry.getName(), lookUpTemplateIds);
+    return lookUpTagsForTemplateIds(tableEntry.getName(), lookUpTemplateIds);
   }
 
-  public ImmutableTable<String, String, Tag> lookUpTags(
+  public ImmutableTable<String, String, Tag> lookUpTagsForTemplateIds(
       String tableEntryId,
       ImmutableCollection<String> lookUpTemplateIds) {
     ImmutableTable.Builder<String, String, Tag> tagMapBuilder = ImmutableTable.builder();

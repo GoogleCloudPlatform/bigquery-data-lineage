@@ -292,6 +292,7 @@ public final class BigQueryPolicyTagService implements Serializable {
         return field;
       }
 
+      @SuppressWarnings("unchecked")
       private TableFieldSchema updateColumnWithPolicy(TableFieldSchema field) {
         HashMap<String, Object> policyTags = new HashMap<>();
         HashSet<String> updatedPolicies = new HashSet<>(

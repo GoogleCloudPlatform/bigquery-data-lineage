@@ -130,7 +130,7 @@ public abstract class LineageTagPropagationConverterFactory {
   }
 
   private Table<String, String, Tag> lookUpMonitoredTags(DataEntity dataEntity) {
-    return dataCatalogService().lookUpTags(dataEntity, monitoredSourceTags());
+    return dataCatalogService().lookUpTagsForTemplateIds(dataEntity, monitoredSourceTags());
   }
 
   public static Builder builder() {

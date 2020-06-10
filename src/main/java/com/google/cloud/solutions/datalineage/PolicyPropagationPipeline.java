@@ -52,7 +52,7 @@ public final class PolicyPropagationPipeline {
               CatalogTagsPropagationTransform
                   .forMonitoredTags(options.getMonitoredCatalogTags())
                   .build())
-          .apply("write to DataCatalog", new DataCatalogWriter());
+          .apply("write to DataCatalog", DataCatalogWriter.newWriter());
     }
 
     if (options.getMonitoredPolicyTags() != null && options.getMonitoredPolicyTags().size() > 0) {
