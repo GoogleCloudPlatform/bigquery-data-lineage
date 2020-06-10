@@ -1,4 +1,5 @@
 ![build](https://github.com/GoogleCloudPlatform/bigquery-data-lineage/workflows/build/badge.svg)
+[![codecov](https://codecov.io/gh/GoogleCloudPlatform/bigquery-data-lineage/branch/master/graph/badge.svg)](https://codecov.io/gh/GoogleCloudPlatform/bigquery-data-lineage)
 
 ## BigQuery Data Lineage using Audit Logs, Pub/Sub, Dataflow and Data Catalog
 
