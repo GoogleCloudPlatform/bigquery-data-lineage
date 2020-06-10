@@ -1,0 +1,52 @@
+[
+  {
+    "template": "projects/myproject1/locations/us-central1/tagTemplates/pii_tag",
+    "fields": {
+      "type": {
+        "displayName": "PII Type",
+        "stringValue": "SENSITIVE"
+      }
+    },
+    "column": ""
+  },
+  {
+    "template": "projects/myproject1/locations/us-central1/tagTemplates/pii_tag",
+    "fields": {
+      "type": {
+        "displayName": "PII Type",
+        "stringValue": "USER_ID"
+      }
+    },
+    "column": "combined_telephone"
+  },
+  {
+    "template": "projects/myproject1/locations/us-central1/tagTemplates/pii_tag2",
+    "fields": {
+      "type": {
+        "displayName": "PII Type2",
+        "stringValue": "SENSITIVE"
+      }
+    },
+    "column": ""
+  },
+  {
+    "template": "projects/myproject1/locations/us-central1/tagTemplates/pii_tag2",
+    "fields": {
+      "type": {
+        "displayName": "PII Type2",
+        "stringValue": "IMSI"
+      }
+    },
+    "column": "combined_telephone"
+  },
+  {
+    "template": "projects/myproject1/locations/us-central1/tagTemplates/pii_tag2",
+    "fields": {
+      "type": {
+        "displayName": "PII Type2",
+        "stringValue": "IMSI"
+      }
+    },
+    "column": "telephone_number"
+  }
+]

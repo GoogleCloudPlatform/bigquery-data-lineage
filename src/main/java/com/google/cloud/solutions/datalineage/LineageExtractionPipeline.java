@@ -81,7 +81,7 @@ public class LineageExtractionPipeline {
       extractedLineage
           .apply("convert lineage to tags",
               CompositeLineageToTagTransformation.withTagTemplateId(options.getTagTemplateId()))
-          .apply("Store in DataCatalog", new DataCatalogWriter());
+          .apply("Store in DataCatalog", DataCatalogWriter.newWriter());
     }
 
     // If enabled, output composite lineage to a pubsub topic for downstream processing.

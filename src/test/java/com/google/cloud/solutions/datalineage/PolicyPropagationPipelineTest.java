@@ -114,52 +114,9 @@ public final class PolicyPropagationPipelineTest {
     PAssert.that(tags)
         .containsInAnyOrder(
             TagsForCatalog
-                .forTags(parseAsList("[{\n"
-                    + "      \"template\": \"projects/myproject1/locations/us-central1/tagTemplates/pii_tag\",\n"
-                    + "      \"fields\": {\n"
-                    + "        \"type\": {\n"
-                    + "          \"displayName\": \"PII Type\",\n"
-                    + "          \"stringValue\": \"SENSITIVE\"\n"
-                    + "        }\n"
-                    + "      },\n"
-                    + "      \"column\": \"\"\n"
-                    + "    }, {\n"
-                    + "      \"template\": \"projects/myproject1/locations/us-central1/tagTemplates/pii_tag\",\n"
-                    + "      \"fields\": {\n"
-                    + "        \"type\": {\n"
-                    + "          \"displayName\": \"PII Type\",\n"
-                    + "          \"stringValue\": \"USER_ID\"\n"
-                    + "        }\n"
-                    + "      },\n"
-                    + "      \"column\": \"combined_telephone\"\n"
-                    + "    }, {\n"
-                    + "      \"template\": \"projects/myproject1/locations/us-central1/tagTemplates/pii_tag2\",\n"
-                    + "      \"fields\": {\n"
-                    + "        \"type\": {\n"
-                    + "          \"displayName\": \"PII Type2\",\n"
-                    + "          \"stringValue\": \"SENSITIVE\"\n"
-                    + "        }\n"
-                    + "      },\n"
-                    + "      \"column\": \"\"\n"
-                    + "    }, {\n"
-                    + "      \"template\": \"projects/myproject1/locations/us-central1/tagTemplates/pii_tag2\",\n"
-                    + "      \"fields\": {\n"
-                    + "        \"type\": {\n"
-                    + "          \"displayName\": \"PII Type2\",\n"
-                    + "          \"stringValue\": \"IMSI\"\n"
-                    + "        }\n"
-                    + "      },\n"
-                    + "      \"column\": \"combined_telephone\"\n"
-                    + "    }, {\n"
-                    + "      \"template\": \"projects/myproject1/locations/us-central1/tagTemplates/pii_tag2\",\n"
-                    + "      \"fields\": {\n"
-                    + "        \"type\": {\n"
-                    + "          \"displayName\": \"PII Type2\",\n"
-                    + "          \"stringValue\": \"IMSI\"\n"
-                    + "        }\n"
-                    + "      },\n"
-                    + "      \"column\": \"telephone_number\"\n"
-                    + "    }]", Tag.class))
+                .forTags(parseAsList(
+                    TestResourceLoader.load("tags_for_catalog_samples/pii_template_tags.json"),
+                    Tag.class))
                 .setEntryId(
                     "projects/myproject1/locations/us/entryGroups/@bigquery/entries/OutputTableId")
                 .build());
