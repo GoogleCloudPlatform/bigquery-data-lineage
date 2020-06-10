@@ -113,31 +113,6 @@
         "description": "The Column Entity which is created/modified",
         "fields": [
           {
-            "name": "table",
-            "type": "RECORD",
-            "mode": "NULLABLE",
-            "description": "The Data Entity which is created/modified",
-            "fields": [
-              {
-                "name": "kind",
-                "type": "STRING",
-                "mode": "NULLABLE",
-                "description": "Type of Entity - (UNKNOWN, QUERY_LEVEL_TABLE, CLOUD_STORAGE_FILE, BIGQUERY_TABLE)"
-              },
-              {
-                "name": "sqlResource",
-                "type": "STRING",
-                "mode": "NULLABLE"
-              },
-              {
-                "name": "linkedResource",
-                "type": "STRING",
-                "mode": "NULLABLE",
-                "description": "A valid Fully Qualified GCP Resource name."
-              }
-            ]
-          },
-          {
             "name": "column",
             "type": "STRING",
             "mode": "NULLABLE",

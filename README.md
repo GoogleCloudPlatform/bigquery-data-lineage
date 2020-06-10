@@ -18,6 +18,14 @@ The diagram above shows an architecture of a system which exports the Audit Logs
     ```shell script
     source set_variables.sh
     ```
+### Enable required GCP services
+```shell script
+gcloud services enable \
+bigquery.googleapis.com \
+datacatalog.googleapis.com \
+dataflow.googleapis.com \
+pubsub.googleapis.com
+```
 
 ### Enable BigQuery Audit Logs to PubSub
 1. Create Pub/Sub topic.
@@ -26,14 +34,16 @@ The diagram above shows an architecture of a system which exports the Audit Logs
    ```` 
 2. Send Audit Logs to PubSub <br>
     ```shell script
-    gcloud logging sinks create bq-audit-logs-sink \
+    gcloud logging sinks create $LOG_SINK_ID \
     pubsub.googleapis.com/projects/$PROJECT_ID/topics/$AUDIT_LOGS_PUBSUB_TOPIC \
-    --log-filter='protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"'
+    --log-filter="protoPayload.metadata.\"@type\"=\"type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata\" \
+   protoPayload.methodName=\"google.cloud.bigquery.v2.JobService.InsertJob\" \
+   operation.last=true"
     ```
 3. Give Pub/Sub “Publisher” permission Logging service account to enable it for pushing the log entries.
     ```shell script
     # Identify the Logs writer service account 
-    export LOGGING_WRITER_IDENTITY=$(gcloud logging sinks describe $LOG_SINK_ID --format="get(writerIdentity)" --project $PROJECT_ID)
+    export LOGGING_WRITER_IDENTITY="$(gcloud logging sinks describe $LOG_SINK_ID --format="get(writerIdentity)" --project $PROJECT_ID)"
     
     # Grant Publish permission to the Logging writer
     gcloud pubsub topics add-iam-policy-binding $AUDIT_LOGS_PUBSUB_TOPIC \
@@ -44,16 +54,16 @@ The diagram above shows an architecture of a system which exports the Audit Logs
 ### Setup BigQuery Table for storing Lineage
 1. Create dataset
     ```shell script
-    bq mk $DATASET_ID \
-    --project=$PROJECT_ID \
-    --location=$BIGQUERY_REGION
+    bq --location=$BIGQUERY_REGION \
+    --project_id=$PROJECT_ID \
+    mk --dataset $DATASET_ID
     ```
 2. Create Table using schema
     ```shell script
     bq mk --table \
     --project_id=$PROJECT_ID \
     --description "Data Lineage table" \
-    --time_partitioning_field "lineageReconcileTime" \
+    --time_partitioning_field "reconcileTime" \
     $DATASET_ID.$LINEAGE_TABLE_ID \
     lineage_bigquery_table_schema.json
     ```
