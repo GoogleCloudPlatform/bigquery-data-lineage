@@ -27,4 +27,11 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     - name: Build and Test with Maven
-      run: mvn -B clean compile package --file pom.xml
+      run: mvn -B clean compile jacoco:report package --file pom.xml
+    - name: Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./target/site/jacoco/jacoco.xml
+          flags: unittests
+          fail_ci_if_error: true
