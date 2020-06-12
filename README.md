@@ -1,16 +1,24 @@
 ![build](https://github.com/GoogleCloudPlatform/bigquery-data-lineage/workflows/build/badge.svg)
 [![codecov](https://codecov.io/gh/GoogleCloudPlatform/bigquery-data-lineage/branch/master/graph/badge.svg)](https://codecov.io/gh/GoogleCloudPlatform/bigquery-data-lineage)
 
-## BigQuery Data Lineage using Audit Logs, Pub/Sub, Dataflow and Data Catalog
+# BigQuery Data Lineage using Audit Logs, Pub/Sub, Dataflow and Data Catalog
 
-Enterprises’ data governance practices require tracking of all movement of sensitive data including Personally Identifiable Information (PII), also a key concern is to ensure that data including metadata stays within the customer’s Cloud Organisation or Project.
+In a big-data environment, operational systems feed the data-warehouse with fresh data, which is processed through multiple pipelines designed by data-engineers into business consumable information, that is analysed by business users through a variety of methods of merging and transforming to gain insights. Knowing the details of its origin, how it got there, and how it’s flowing through the business is paramount to its value.
+
+[Data Lineage](https://en.wikipedia.org/wiki/Data_lineage) is the ability to trace origin and transformations that the data goes through over time. Traceability in a big data system is critical from a data-governance standpoint to put safe-guards on sensitive data and also to ensure that data including metadata stays within the customer’s Cloud Organisation or Project. This solution shall introduce you to a reference implementation for a Lineage system for [Big Query](https://cloud.google.com/bigquery).
+
+### Reference Architecture
 
 ![architecutre](lineage_solution_diagram.svg)
 
-The diagram above shows an architecture of a system which exports the Audit Logs emitted from BigQuery to a messaging system like Pub/Sub for consuming in real time. The Dataflow pipelines then processes the job information to build data lineage by parsing the query’s SQL using ZetaSQL engine. It captures the table schema using BigQuery Table API and persists the generated lineage in a BigQuery table and as Tags in Data Catalog. The Lineage table can then be queried to identify complete flow of data in the warehouse. 
+The system uses Audit Logs emitted from BigQuery to identify operation's lineage information. A messaging system (Pub/Sub) is used for consuming the logs in real time to ensure system level decoupling. The Dataflow pipelines then processes the job information to build data lineage by parsing the query’s SQL using [ZetaSQL](https://github.com/google/zetasql) as Query Grammar provider. It captures the table schema using BigQuery API and persists the generated lineage in a BigQuery table and also as Tags in Data Catalog. The Lineage table can then be queried to identify complete flow of data in the warehouse. 
 
 
-> This solution only works on Linux or MacOS X as [ZetaSQL](https://github.com/google/zetasql) only supports these platfoms at the moment
+> This solution only works on Linux or MacOS X due [ZetaSQL](https://github.com/google/zetasql) JNI connectors not being avaiable for Windows at the moment.
+
+## Quick Start
+
+[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/bigquery-data-lineage.git)
 
 ### Setup environment variables
 1. Set values for variables in `set_variables.sh` file.<br/>This allows you to set all option values in one place.
