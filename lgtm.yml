@@ -1,0 +1,7 @@
+extraction:
+  java:
+    before_index: "export BUILD_MODE=release"
+    index:
+      maven:
+        version: "3.6.3"
+      java_version: "11"
