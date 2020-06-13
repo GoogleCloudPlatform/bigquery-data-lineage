@@ -1,5 +1,7 @@
 ![build](https://github.com/GoogleCloudPlatform/bigquery-data-lineage/workflows/build/badge.svg)
 [![codecov](https://codecov.io/gh/GoogleCloudPlatform/bigquery-data-lineage/branch/master/graph/badge.svg)](https://codecov.io/gh/GoogleCloudPlatform/bigquery-data-lineage)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/GoogleCloudPlatform/bigquery-data-lineage.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/GoogleCloudPlatform/bigquery-data-lineage/alerts/)
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/GoogleCloudPlatform/bigquery-data-lineage.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/GoogleCloudPlatform/bigquery-data-lineage/context:java)
 
 # BigQuery Data Lineage using Audit Logs, Pub/Sub, Dataflow and Data Catalog
 
