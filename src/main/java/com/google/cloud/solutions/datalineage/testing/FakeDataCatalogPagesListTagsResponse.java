@@ -54,77 +54,77 @@ public class FakeDataCatalogPagesListTagsResponse extends FakeApiFutureBase<List
 
         @Override
         public void operationSucceeded() {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void operationCancelled() {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void operationFailed(Throwable throwable) {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void connectionSelected(String s) {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void attemptStarted(int i) {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void attemptSucceeded() {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void attemptCancelled() {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void attemptFailed(Throwable throwable, Duration duration) {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void attemptFailedRetriesExhausted(Throwable throwable) {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void attemptPermanentFailure(Throwable throwable) {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void lroStartFailed(Throwable throwable) {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void lroStartSucceeded() {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void responseReceived() {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void requestSent() {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
 
         @Override
         public void batchRequestSent(long l, long l1) {
-
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
       }).setExtraHeaders(ImmutableMap.of()).build();
     }

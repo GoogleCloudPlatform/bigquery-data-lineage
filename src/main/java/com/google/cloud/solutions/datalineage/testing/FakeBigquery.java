@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class FakeBigquery extends Bigquery {
 
-  public final HashMap<String, Table> predefinedTables;
+  public final Map<String, Table> predefinedTables;
   @VisibleForTesting
   public final AtomicInteger numTimesCounterTables;
   @VisibleForTesting
@@ -121,7 +121,8 @@ public class FakeBigquery extends Bigquery {
                     && Objects.equals(existingField.getMode(), updatedField.getMode());
 
             if (!matches) {
-              throw new IOException("Field does not match: " + existingField.getName());
+              String fieldName = (existingField == null) ? "null" : existingField.getName();
+              throw new IOException("Field does not match: " + fieldName);
             }
           }
         };

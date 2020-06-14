@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.flogger.FluentLogger;
 import java.io.IOException;
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
@@ -37,9 +38,9 @@ import java.util.concurrent.TimeUnit;
  * Provides loading Table information using BigQuery API. It {@link Cache}s the reads from the API
  * for 5 minutes.
  */
-public final class BigQueryTableLoadService {
+public final class BigQueryTableLoadService implements Serializable {
 
-  private final static FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   private final BigQueryServiceFactory bqServiceFactory;
   private static final Cache<BigQueryTableEntity, Table> LOCAL_CACHE = buildCache();

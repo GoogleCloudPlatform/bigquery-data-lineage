@@ -19,7 +19,6 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import com.google.api.services.bigquery.model.TimePartitioning;
 import com.google.cloud.solutions.datalineage.converter.CompositeLineageTableRowMapper;
 import com.google.cloud.solutions.datalineage.extractor.BigQueryTableCreator;
-import com.google.cloud.solutions.datalineage.model.BigQueryTableEntity;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.CompositeLineage;
 import com.google.cloud.solutions.datalineage.service.BigQueryServiceFactory;
 import com.google.cloud.solutions.datalineage.service.BigQueryZetaSqlSchemaLoaderFactory;
@@ -27,7 +26,6 @@ import com.google.cloud.solutions.datalineage.service.DataCatalogService;
 import com.google.cloud.solutions.datalineage.transform.CompositeLineageToTagTransformation;
 import com.google.cloud.solutions.datalineage.transform.LineageExtractionTransform;
 import com.google.cloud.solutions.datalineage.writer.DataCatalogWriter;
-import com.google.common.flogger.FluentLogger;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.CreateDisposition;
@@ -38,20 +36,21 @@ import org.apache.beam.sdk.values.PCollection;
 
 public class LineageExtractionPipeline {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-
   public static void main(String[] args) {
     PipelineOptionsFactory.register(LineageExtractionPipelineOptions.class);
     LineageExtractionPipelineOptions options = PipelineOptionsFactory.fromArgs(args)
         .withValidation().as(LineageExtractionPipelineOptions.class);
 
-    BigQueryTableEntity lineageTable = BigQueryTableCreator
-        .fromLegacyTableName(options.getLineageTableName());
+    Pipeline pipeline = Pipeline.create(options);
 
+    buildPipeline(pipeline, options);
+
+    pipeline.run();
+  }
+
+  private static void buildPipeline(Pipeline pipeline, LineageExtractionPipelineOptions options) {
     // Validate Tag Template Id
     DataCatalogService.validateTemplateId(options.getTagTemplateId());
-
-    Pipeline pipeline = Pipeline.create(options);
 
     PCollection<CompositeLineage> extractedLineage =
         pipeline
@@ -59,7 +58,8 @@ public class LineageExtractionPipeline {
                 PubsubIO.readStrings().fromTopic(options.getPubsubTopic()))
             .apply("Parse Message and extract Lineage",
                 LineageExtractionTransform.builder()
-                    .setOutputLineageTable(lineageTable)
+                    .setOutputLineageTable(BigQueryTableCreator
+                        .fromLegacyTableName(options.getLineageTableName()))
                     .setZetaSqlSchemaLoaderFactory(
                         BigQueryZetaSqlSchemaLoaderFactory
                             .usingServiceFactory(BigQueryServiceFactory.defaultFactory()))
@@ -93,7 +93,5 @@ public class LineageExtractionPipeline {
                   .to(options.getCompositeLineageTopic())
                   .withTimestampAttribute("reconcileTime"));
     }
-
-    pipeline.run();
   }
 }

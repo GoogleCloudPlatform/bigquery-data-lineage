@@ -20,7 +20,6 @@ import com.google.cloud.solutions.datalineage.model.LineageMessages.TargetPolicy
 import com.google.cloud.solutions.datalineage.service.BigQueryPolicyTagService;
 import com.google.cloud.solutions.datalineage.service.BigQueryServiceFactory;
 import com.google.common.collect.ImmutableList;
-import com.google.common.flogger.FluentLogger;
 import java.util.List;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.PTransform;
@@ -34,8 +33,6 @@ import org.apache.beam.sdk.values.PCollection;
 @AutoValue
 public abstract class PolicyTagsPropagationTransform extends
     PTransform<PCollection<CompositeLineage>, PCollection<TargetPolicyTags>> {
-
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   abstract List<String> monitoredPolicyTags();
 

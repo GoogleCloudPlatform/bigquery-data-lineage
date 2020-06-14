@@ -19,7 +19,6 @@ import com.google.cloud.solutions.datalineage.extractor.BigQueryTableCreator;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.TargetPolicyTags;
 import com.google.cloud.solutions.datalineage.service.BigQueryPolicyTagService;
 import com.google.cloud.solutions.datalineage.service.BigQueryServiceFactory;
-import java.io.IOException;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
@@ -41,7 +40,7 @@ public abstract class BigQueryPolicyTagsWriter extends
         new DoFn<TargetPolicyTags, Void>() {
 
           @ProcessElement
-          public void applyAllTags(@Element TargetPolicyTags targetTags) throws IOException {
+          public void applyAllTags(@Element TargetPolicyTags targetTags) {
             BigQueryPolicyTagService.usingServiceFactory(bigQueryServiceFactory())
                 .updatePoliciesForTable(
                     BigQueryTableCreator

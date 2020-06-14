@@ -32,4 +32,7 @@ public final class TestResourceLoader {
       return "";
     }
   }
+
+  private TestResourceLoader() {
+  }
 }

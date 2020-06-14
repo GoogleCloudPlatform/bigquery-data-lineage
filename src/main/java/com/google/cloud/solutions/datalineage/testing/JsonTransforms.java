@@ -26,4 +26,7 @@ public final class JsonTransforms {
       return "";
     }
   }
+
+  private JsonTransforms() {
+  }
 }
