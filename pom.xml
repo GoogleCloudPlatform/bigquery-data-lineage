@@ -38,6 +38,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <protobuf.version>3.11.4</protobuf.version>
     <slf4j.version>1.7.25</slf4j.version>
+    <sonar.projectKey>GoogleCloudPlatform_bigquery-data-lineage</sonar.projectKey>
+    <sonar.organization>googlecloudplatform</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.version>3.6.1.1688</sonar.version>
     <spark.version>2.4.4</spark.version>
     <zetasql.version>2020.04.1</zetasql.version>
   </properties>
@@ -373,6 +377,12 @@
           <configuration>
             <cleanupDaemonThreads>false</cleanupDaemonThreads>
           </configuration>
+        </plugin>
+        <!-- SonarQube / SonarCloud plugin for static analysis and Test coverage. -->
+        <plugin>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+          <artifactId>sonar-maven-plugin</artifactId>
+          <version>${sonar.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
