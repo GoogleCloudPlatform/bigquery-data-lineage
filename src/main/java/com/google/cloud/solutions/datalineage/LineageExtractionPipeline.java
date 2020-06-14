@@ -26,6 +26,7 @@ import com.google.cloud.solutions.datalineage.service.DataCatalogService;
 import com.google.cloud.solutions.datalineage.transform.CompositeLineageToTagTransformation;
 import com.google.cloud.solutions.datalineage.transform.LineageExtractionTransform;
 import com.google.cloud.solutions.datalineage.writer.DataCatalogWriter;
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.CreateDisposition;
@@ -41,14 +42,11 @@ public class LineageExtractionPipeline {
     LineageExtractionPipelineOptions options = PipelineOptionsFactory.fromArgs(args)
         .withValidation().as(LineageExtractionPipelineOptions.class);
 
-    Pipeline pipeline = Pipeline.create(options);
-
-    buildPipeline(pipeline, options);
-
-    pipeline.run();
+    buildPipeline(Pipeline.create(options), options).run();
   }
 
-  private static void buildPipeline(Pipeline pipeline, LineageExtractionPipelineOptions options) {
+  @VisibleForTesting
+  static Pipeline buildPipeline(Pipeline pipeline, LineageExtractionPipelineOptions options) {
     // Validate Tag Template Id
     DataCatalogService.validateTemplateId(options.getTagTemplateId());
 
@@ -93,5 +91,7 @@ public class LineageExtractionPipeline {
                   .to(options.getCompositeLineageTopic())
                   .withTimestampAttribute("reconcileTime"));
     }
+
+    return pipeline;
   }
 }

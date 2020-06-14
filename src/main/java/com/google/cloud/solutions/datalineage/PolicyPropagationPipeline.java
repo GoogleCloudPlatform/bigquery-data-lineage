@@ -21,6 +21,7 @@ import com.google.cloud.solutions.datalineage.transform.CatalogTagsPropagationTr
 import com.google.cloud.solutions.datalineage.transform.PolicyTagsPropagationTransform;
 import com.google.cloud.solutions.datalineage.writer.BigQueryPolicyTagsWriter;
 import com.google.cloud.solutions.datalineage.writer.DataCatalogWriter;
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
@@ -33,8 +34,11 @@ public final class PolicyPropagationPipeline {
     PolicyPropagationPipelineOptions options =
         PipelineOptionsFactory.fromArgs(args).as(PolicyPropagationPipelineOptions.class);
 
-    Pipeline pipeline = Pipeline.create(options);
+    buildPipeline(Pipeline.create(options), options).run();
+  }
 
+  @VisibleForTesting
+  static Pipeline buildPipeline(Pipeline pipeline, PolicyPropagationPipelineOptions options) {
     PCollection<CompositeLineage> compositeLineage =
         pipeline
             .apply("Read Composite Lineage",
@@ -65,6 +69,7 @@ public final class PolicyPropagationPipeline {
               BigQueryPolicyTagsWriter.builder()
                   .bigQueryServiceFactory(BigQueryServiceFactory.defaultFactory()).build());
     }
-    pipeline.run();
+
+    return pipeline;
   }
 }
