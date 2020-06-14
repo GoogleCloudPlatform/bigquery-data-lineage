@@ -61,6 +61,7 @@ public final class GroupByExtractor extends ColumnLineageExtractor {
                           .getExpr()
                           .accept(
                               new Visitor() {
+                                @Override
                                 public void visit(
                                     ResolvedColumnRef columnRef) {
                                   sources

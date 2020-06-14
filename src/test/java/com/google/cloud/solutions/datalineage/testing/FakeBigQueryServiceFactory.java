@@ -30,7 +30,7 @@ public final class FakeBigQueryServiceFactory implements BigQueryServiceFactory 
   }
 
   public static BigQueryServiceFactory forStub(FakeBigquery fakeService) {
-    return (BigQueryServiceFactory) () -> fakeService;
+    return () -> fakeService;
   }
 
   @Override

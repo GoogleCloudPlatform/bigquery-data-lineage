@@ -21,7 +21,7 @@ import com.google.cloud.solutions.datalineage.transform.CatalogTagsPropagationTr
 import com.google.cloud.solutions.datalineage.transform.PolicyTagsPropagationTransform;
 import com.google.cloud.solutions.datalineage.writer.BigQueryPolicyTagsWriter;
 import com.google.cloud.solutions.datalineage.writer.DataCatalogWriter;
-import java.io.IOException;
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
@@ -29,13 +29,16 @@ import org.apache.beam.sdk.values.PCollection;
 
 public final class PolicyPropagationPipeline {
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     PipelineOptionsFactory.register(PolicyPropagationPipelineOptions.class);
     PolicyPropagationPipelineOptions options =
         PipelineOptionsFactory.fromArgs(args).as(PolicyPropagationPipelineOptions.class);
 
-    Pipeline pipeline = Pipeline.create(options);
+    buildPipeline(Pipeline.create(options), options).run();
+  }
 
+  @VisibleForTesting
+  static Pipeline buildPipeline(Pipeline pipeline, PolicyPropagationPipelineOptions options) {
     PCollection<CompositeLineage> compositeLineage =
         pipeline
             .apply("Read Composite Lineage",
@@ -43,7 +46,7 @@ public final class PolicyPropagationPipeline {
                     .readProtos(CompositeLineage.class)
                     .fromTopic(options.getLineagePubSubTopic()));
 
-    if (options.getMonitoredCatalogTags() != null && options.getMonitoredCatalogTags().size() > 0) {
+    if (options.getMonitoredCatalogTags() != null && !options.getMonitoredCatalogTags().isEmpty()) {
       //Validate Monitored Catalog Tags
       DataCatalogService.validateTemplateIds(options.getMonitoredCatalogTags());
 
@@ -55,7 +58,7 @@ public final class PolicyPropagationPipeline {
           .apply("write to DataCatalog", DataCatalogWriter.newWriter());
     }
 
-    if (options.getMonitoredPolicyTags() != null && options.getMonitoredPolicyTags().size() > 0) {
+    if (options.getMonitoredPolicyTags() != null && !options.getMonitoredPolicyTags().isEmpty()) {
       compositeLineage
           .apply("Identify Policy Tags for Destination Table",
               PolicyTagsPropagationTransform.builder()
@@ -66,6 +69,7 @@ public final class PolicyPropagationPipeline {
               BigQueryPolicyTagsWriter.builder()
                   .bigQueryServiceFactory(BigQueryServiceFactory.defaultFactory()).build());
     }
-    pipeline.run();
+
+    return pipeline;
   }
 }

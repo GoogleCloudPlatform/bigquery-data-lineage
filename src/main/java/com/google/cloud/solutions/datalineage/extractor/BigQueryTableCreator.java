@@ -102,4 +102,7 @@ public abstract class BigQueryTableCreator {
         .setTable(matcher.group(TABLE_ID_TAG))
         .build();
   }
+
+  private BigQueryTableCreator() {
+  }
 }

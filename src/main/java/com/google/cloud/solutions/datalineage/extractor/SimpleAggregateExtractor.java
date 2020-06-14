@@ -61,6 +61,7 @@ public class SimpleAggregateExtractor extends
                           .getExpr()
                           .accept(
                               new Visitor() {
+                                @Override
                                 public void visit(ResolvedAggregateFunctionCall aggFuncCall) {
                                   aggOperations.add(
                                       String.format(
@@ -70,6 +71,7 @@ public class SimpleAggregateExtractor extends
 
                                   aggFuncCall.accept(
                                       new Visitor() {
+                                        @Override
                                         public void visit(ResolvedColumnRef resolvedArguments) {
                                           sources.add(
                                               convertToColumnEntity(resolvedArguments.getColumn()));

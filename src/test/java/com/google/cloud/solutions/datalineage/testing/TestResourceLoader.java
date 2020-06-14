@@ -14,16 +14,25 @@
 
 package com.google.cloud.solutions.datalineage.testing;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-public final class JsonTransforms {
+public final class TestResourceLoader {
 
-  public static <T> String stringify(T obj) {
+  private static final String TEST_RESOURCE_FOLDER = "test";
+
+  public static String load(String resourceFileName) {
     try {
-      return new ObjectMapper().writeValueAsString(obj);
-    } catch (JsonProcessingException jsonProcessingException) {
+      byte[] bytes = Files
+          .readAllBytes(Paths.get("src", TEST_RESOURCE_FOLDER, "resources", resourceFileName));
+      return new String(bytes, StandardCharsets.UTF_8);
+    } catch (IOException ioException) {
       return "";
     }
+  }
+
+  private TestResourceLoader() {
   }
 }

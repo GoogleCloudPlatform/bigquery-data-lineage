@@ -90,30 +90,6 @@ public final class BigQueryPolicyTagService implements Serializable {
         .collect(toImmutableList());
   }
 
-  private ImmutableTable<DataEntity, String, ColumnPolicyTags> readPolicyMap(
-      BigQueryTableEntity tableEntity,
-      Collection<String> monitoredPolicyIds) {
-
-    return readPolicies(tableEntity, monitoredPolicyIds).stream()
-        .collect(toImmutableTable((c) -> tableEntity.dataEntity(), ColumnPolicyTags::getColumn,
-            identity()));
-  }
-
-  private ImmutableTable<DataEntity, String, ColumnPolicyTags> readPolicyMap(
-      Collection<DataEntity> tableEntities, Collection<String> monitoredPolicyTags) {
-    return
-        tableEntities.stream()
-            .map(DataEntity::getLinkedResource)
-            .map(BigQueryTableCreator::fromBigQueryResource)
-            .map(bqTable -> readPolicyMap(bqTable, monitoredPolicyTags))
-            .flatMap(t -> t.cellSet().stream())
-            .collect(
-                toImmutableTable(
-                    Cell::getRowKey,
-                    Cell::getColumnKey,
-                    Cell::getValue));
-  }
-
   public PolicyUpdateFinder finderForLineage(CompositeLineage lineage) {
 
     return new PolicyUpdateFinder(lineage);
@@ -126,6 +102,31 @@ public final class BigQueryPolicyTagService implements Serializable {
     public PolicyUpdateFinder(
         CompositeLineage lineage) {
       this.lineage = lineage;
+    }
+
+    private ImmutableTable<DataEntity, String, ColumnPolicyTags> readPolicyMap(
+        Collection<DataEntity> tableEntities, Collection<String> monitoredPolicyTags) {
+      return
+          tableEntities.stream()
+              .map(DataEntity::getLinkedResource)
+              .map(BigQueryTableCreator::fromBigQueryResource)
+              .map(bqTable -> readPolicyMap(bqTable, monitoredPolicyTags))
+              .flatMap(t -> t.cellSet().stream())
+              .collect(
+                  toImmutableTable(
+                      Cell::getRowKey,
+                      Cell::getColumnKey,
+                      Cell::getValue));
+    }
+
+    private ImmutableTable<DataEntity, String, ColumnPolicyTags> readPolicyMap(
+        BigQueryTableEntity tableEntity,
+        Collection<String> monitoredPolicyIds) {
+
+      return readPolicies(tableEntity, monitoredPolicyIds).stream()
+          .collect(
+              toImmutableTable(policyTags -> tableEntity.dataEntity(), ColumnPolicyTags::getColumn,
+                  identity()));
     }
 
     public Optional<TargetPolicyTags> forPolicies(Collection<String> monitoredPolicyIds) {
@@ -162,7 +163,7 @@ public final class BigQueryPolicyTagService implements Serializable {
 
       ImmutableList<ColumnPolicyTags> targetPolicyTags =
           tagsForTargetTable.entrySet().stream()
-              .filter(entry -> entry.getValue() != null && entry.getValue().size() > 0)
+              .filter(entry -> entry.getValue() != null && !entry.getValue().isEmpty())
               .map(entry ->
                   ColumnPolicyTags.newBuilder()
                       .setColumn(entry.getKey())

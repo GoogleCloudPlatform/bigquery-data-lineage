@@ -26,6 +26,6 @@ public class BigQueryOperationException extends RuntimeException {
   }
 
   public BigQueryOperationException(BigQueryTableEntity table, Throwable cause) {
-    super(String.format("BigQuery Operation exception for\n%s", table), cause);
+    super(String.format("BigQuery Operation exception for%n%s", table), cause);
   }
 }

@@ -144,7 +144,7 @@ public class DataCatalogService {
 
     if (!matcher.find()) {
       throw new IllegalArgumentException(
-          String.format("Given Template Id (%S) not in format\n(%s)",
+          String.format("Given Template Id (%S) not in format%n(%s)",
               tagTemplateId,
               matcher.pattern()));
     }

@@ -66,7 +66,7 @@ public abstract class CloudStorageFile implements DataEntityConvertible, Seriali
 
   @AutoValue.Builder
   @JsonPOJOBuilder(withPrefix = "set")
-  public static abstract class Builder {
+  public abstract static class Builder {
 
     public abstract Builder setBucket(String bucket);
 

@@ -149,4 +149,7 @@ public final class ProtoJsonConverter {
             .collect(toImmutableList()),
         protoClass);
   }
+
+  private ProtoJsonConverter() {
+  }
 }

@@ -112,6 +112,7 @@ public final class FakeDataCatalogStub extends DataCatalogStub implements Serial
 
   @Override
   public void close() {
+    // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
   }
 
   @Override

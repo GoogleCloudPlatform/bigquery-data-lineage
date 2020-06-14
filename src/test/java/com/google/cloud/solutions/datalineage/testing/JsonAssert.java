@@ -36,9 +36,12 @@ public final class JsonAssert {
 
     if (!JsonParser.parseString(actual).equals(JsonParser.parseString(expected))) {
       String assertionMessage = String
-          .format("JSON mismatch\nactual:\n%s\ndoes not match expected:\n%s", actual, expected);
+          .format("JSON mismatch%nactual:%n%s%ndoes not match expected:%n%s", actual, expected);
       throw new AssertionError(assertionMessage);
     }
+  }
+
+  private JsonAssert() {
   }
 
 }
