@@ -2,7 +2,7 @@ syntax = "proto3";
 package com.google.cloud.solutions.datalineage.model;
 
 message CompositeLineage {
-  uint64 reconcileTime = 1;
+  int64 reconcileTime = 1;
   JobInformation jobInformation = 2;
   TableLineage tableLineage = 5;
   repeated ColumnLineage columnsLineage = 10;
@@ -10,7 +10,7 @@ message CompositeLineage {
 
 message JobInformation {
   string jobId = 1;
-  uint64 jobTime = 2;
+  int64 jobTime = 2;
   string jobType = 5;
   string actuator = 10;
 }
