@@ -21,6 +21,8 @@ The system uses Audit Logs emitted from BigQuery to identify operation's lineage
 
 > This solution only works on Linux or MacOS X due [ZetaSQL](https://github.com/google/zetasql) JNI connectors not being avaiable for Windows at the moment.
 
+> The SQL Parser implemented here is for proof-of-concept purposes only and has [Limitations](LIMITATIONS.md).
+
 ## Quick Start
 
 [![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/bigquery-data-lineage.git)
