@@ -17,8 +17,11 @@
 package com.google.cloud.solutions.datalineage.extractor;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import com.google.cloud.solutions.datalineage.converter.MessageParser;
+import com.google.common.base.Objects;
 import com.google.common.flogger.FluentLogger;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -34,28 +37,45 @@ public final class JsonMessageParser implements MessageParser {
 
   private final String messageJson;
   private final DocumentContext parsedMessage;
+  private final String rootPath;
 
-  public JsonMessageParser(String messageJson) {
-    this.messageJson = messageJson;
-    this.parsedMessage = JsonPath.parse(messageJson);
+  private JsonMessageParser(String messageJson, String rootPath) {
+    this(JsonPath.parse(messageJson), rootPath);
+  }
+
+  private JsonMessageParser(DocumentContext parsedMessage, String rootPath) {
+    this.messageJson = parsedMessage.jsonString();
+    this.parsedMessage = parsedMessage;
+    this.rootPath = rootPath;
+  }
+
+  /**
+   * Returns a JSON parser for a subnode of the present Object.
+   */
+  public JsonMessageParser forSubNode(String subNodeKey) {
+    return new JsonMessageParser(parsedMessage, buildPath(subNodeKey));
   }
 
   public static JsonMessageParser of(String messageJson) {
-    return new JsonMessageParser(messageJson);
+    return builder().setMessageJson(messageJson).build();
   }
 
   /**
    * Returns the JSON message used by this parser instant.
    */
   public String getJson() {
-    return messageJson;
+    return parsedMessage.jsonString();
+  }
+
+  public String getRootPath() {
+    return rootPath;
   }
 
   @Override
   public <T> T read(String jsonPath) {
     try {
-      return parsedMessage.read(jsonPath);
-    } catch (NullPointerException | PathNotFoundException exception) {
+      return parsedMessage.read(buildPath(jsonPath));
+    } catch (PathNotFoundException | NullPointerException exception) {
       logger.atInfo()
           .withCause(exception)
           .atMostEvery(1, TimeUnit.MINUTES)
@@ -72,9 +92,67 @@ public final class JsonMessageParser implements MessageParser {
   @Override
   public boolean containsKey(String keyPath) {
     try {
-      return (parsedMessage.read(keyPath) != null);
-    } catch (PathNotFoundException e) {
+      return (parsedMessage.read(buildPath(keyPath)) != null);
+    } catch (PathNotFoundException | NullPointerException e) {
       return false;
+    }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof JsonMessageParser)) {
+      return false;
+    }
+    JsonMessageParser that = (JsonMessageParser) o;
+    return Objects.equal(messageJson, that.messageJson) &&
+        Objects.equal(rootPath, that.rootPath);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(parsedMessage, rootPath);
+  }
+
+  private String buildPath(String path) {
+    checkArgument(path.startsWith("$."));
+    return rootPath + "." + path.replaceFirst("^\\$\\.", "");
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  /**
+   * Convenience Builder class for Json Parser.
+   */
+  public static class Builder {
+
+    private String messageJson;
+    private String rootPath = "$";
+
+    public Builder setMessageJson(String messageJson) {
+      this.messageJson = checkString(messageJson);
+      return this;
+    }
+
+    public Builder setRootPath(String rootPath) {
+      this.rootPath = checkString(rootPath);
+      return this;
+    }
+
+    private static String checkString(String string) {
+      if (isBlank(string)) {
+        throw new NullPointerException("can't be null or empty (was: \"" + string + "\")");
+      }
+
+      return string;
+    }
+
+    public JsonMessageParser build() {
+      return new JsonMessageParser(messageJson, rootPath);
     }
   }
 }

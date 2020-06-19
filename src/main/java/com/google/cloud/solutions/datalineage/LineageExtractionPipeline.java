@@ -28,7 +28,6 @@ import com.google.cloud.solutions.datalineage.service.DataCatalogService;
 import com.google.cloud.solutions.datalineage.transform.CompositeLineageToTagTransformation;
 import com.google.cloud.solutions.datalineage.transform.LineageExtractionTransform;
 import com.google.cloud.solutions.datalineage.writer.DataCatalogWriter;
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.CreateDisposition;
@@ -44,22 +43,15 @@ public class LineageExtractionPipeline {
     LineageExtractionPipelineOptions options = PipelineOptionsFactory.fromArgs(args)
         .withValidation().as(LineageExtractionPipelineOptions.class);
 
-    buildPipeline(Pipeline.create(options), options).run();
-  }
-
-  @VisibleForTesting
-  static Pipeline buildPipeline(Pipeline pipeline, LineageExtractionPipelineOptions options) {
-    // Validate Tag Template Id
-    DataCatalogService.validateTemplateId(options.getTagTemplateId());
-
+    Pipeline pipeline = Pipeline.create(options);
     PCollection<CompositeLineage> extractedLineage =
         pipeline
             .apply("Retrieve Audit logs from PubSub",
                 PubsubIO.readStrings().fromTopic(options.getPubsubTopic()))
             .apply("Parse Message and extract Lineage",
                 LineageExtractionTransform.builder()
-                    .setOutputLineageTable(BigQueryTableCreator
-                        .fromLegacyTableName(options.getLineageTableName()))
+                    .setOutputLineageTable(
+                        BigQueryTableCreator.fromLegacyTableName(options.getLineageTableName()))
                     .setZetaSqlSchemaLoaderFactory(
                         BigQueryZetaSqlSchemaLoaderFactory
                             .usingServiceFactory(BigQueryServiceFactory.defaultFactory()))
@@ -78,6 +70,9 @@ public class LineageExtractionPipeline {
 
     // Store in Data Catalog if tag Template Id is provided.
     if (isNotBlank(options.getTagTemplateId())) {
+      // Validate Tag Template Id
+      DataCatalogService.validateTemplateId(options.getTagTemplateId());
+
       extractedLineage
           .apply("convert lineage to tags",
               CompositeLineageToTagTransformation.withTagTemplateId(options.getTagTemplateId()))
@@ -94,6 +89,6 @@ public class LineageExtractionPipeline {
                   .withTimestampAttribute("reconcileTime"));
     }
 
-    return pipeline;
+    pipeline.run();
   }
 }

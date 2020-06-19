@@ -1,0 +1,73 @@
+{
+  "protoPayload": {
+    "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+    "status": {},
+    "authenticationInfo": {
+      "principalEmail": "fakeskimo@blueseagulls.com"
+    },
+    "requestMetadata": {
+      "callerIp": "121.141.88.187",
+      "callerSuppliedUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36,gzip(gfe)"
+    },
+    "serviceName": "bigquery.googleapis.com",
+    "methodName": "google.cloud.bigquery.v2.JobService.InsertJob",
+    "authorizationInfo": [
+      {
+        "resource": "projects/helical-client-276602",
+        "permission": "bigquery.jobs.create",
+        "granted": true
+      },
+      {
+        "resource": "projects/helical-client-276602",
+        "permission": "bigquery.jobs.create",
+        "granted": true
+      }
+    ],
+    "resourceName": "projects/helical-client-276602/jobs/bquxjob_49c5a65b_171f28a27d4",
+    "metadata": {
+      "jobChange": {
+        "after": "DONE",
+        "job": {
+          "jobName": "projects/helical-client-276602/jobs/bquxjob_49c5a65b_171f28a27d4",
+          "jobConfig": {
+            "type": "COPY",
+            "tableCopyConfig": {
+              "sourceTables": [
+                "projects/helical-client-276602/datasets/airports/tables/ValidTable"
+              ],
+              "destinationTable": "projects/helical-client-276602/datasets/airports/tables/anon4656e82b3ec523a4acf2a3d231ba8db110c81f21",
+              "createDisposition": "CREATE_IF_NEEDED",
+              "writeDisposition": "WRITE_EMPTY"
+            }
+          },
+          "jobStatus": {
+            "jobState": "DONE"
+          },
+          "jobStats": {
+            "createTime": "2020-05-08T04:27:53.002Z",
+            "startTime": "2020-05-08T04:27:53.082Z",
+            "endTime": "2020-05-08T04:27:54.106Z"
+          }
+        }
+      },
+      "@type": "type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
+    }
+  },
+  "insertId": "x0ttrje1b700",
+  "resource": {
+    "type": "bigquery_project",
+    "labels": {
+      "project_id": "helical-client-276602",
+      "location": "US"
+    }
+  },
+  "timestamp": "2020-05-08T04:27:54.116Z",
+  "severity": "INFO",
+  "logName": "projects/helical-client-276602/logs/cloudaudit.googleapis.com%2Fdata_access",
+  "operation": {
+    "id": "1588912073002-helical-client-276602:bquxjob_49c5a65b_171f28a27d4",
+    "producer": "bigquery.googleapis.com",
+    "last": true
+  },
+  "receiveTimestamp": "2020-05-08T04:27:55.122858007Z"
+}

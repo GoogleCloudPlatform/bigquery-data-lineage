@@ -16,23 +16,16 @@
 
 package com.google.cloud.solutions.datalineage.transform;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.cloud.solutions.datalineage.service.ZetaSqlSchemaLoaderFactory.emptyLoaderFactory;
 
 import com.google.auto.value.AutoValue;
-import com.google.cloud.solutions.datalineage.extractor.BigQueryTableCreator;
-import com.google.cloud.solutions.datalineage.extractor.LineageExtractorIdentifier;
+import com.google.cloud.solutions.datalineage.extractor.InsertJobTableLineageExtractor;
+import com.google.cloud.solutions.datalineage.extractor.JsonMessageParser;
 import com.google.cloud.solutions.datalineage.model.BigQueryTableEntity;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.CompositeLineage;
-import com.google.cloud.solutions.datalineage.model.LineageMessages.DataEntity;
-import com.google.cloud.solutions.datalineage.model.LineageMessages.TableLineage;
 import com.google.cloud.solutions.datalineage.service.ZetaSqlSchemaLoaderFactory;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Streams;
 import com.google.protobuf.Message;
 import java.time.Clock;
-import java.util.List;
-import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.Filter;
@@ -47,8 +40,6 @@ public abstract class LineageExtractionTransform extends
 
   public abstract BigQueryTableEntity getOutputLineageTable();
 
-  public abstract List<String> getNonMonitoredTables();
-
   @Nullable
   public abstract Clock getClock();
 
@@ -58,41 +49,19 @@ public abstract class LineageExtractionTransform extends
   @Override
   public PCollection<CompositeLineage> expand(PCollection<String> auditLogMessages) {
     return auditLogMessages
+        .apply("Validate Log Events", Filter.by(AuditLogValidator.create(getOutputLineageTable())))
         .apply("Extract Lineage", ParDo.of(new IdentifyAndExtract()))
-        .apply("Validate Events", Filter.by(isValidMessage()));
+        .apply("Validate Lineage", Filter.by(checkNonEmptyLineage()));
   }
 
   /**
    * Returns true if the {@link CompositeLineage} contains at least jobInformation and TableLineage
    * and the target table is not the Lineage Output BigQuery table.
    */
-  private SerializableFunction<CompositeLineage, Boolean> isValidMessage() {
-
-    final ImmutableSet<DataEntity> nonMonitoredTables =
-        Streams.concat(Stream.of(getOutputLineageTable()),
-            getNonMonitoredTables().stream()
-                .map(BigQueryTableCreator::usingBestEffort))
-            .map(BigQueryTableEntity::dataEntity)
-            .collect(toImmutableSet());
-
-    return new SerializableFunction<CompositeLineage, Boolean>() {
-      @Override
-      public Boolean apply(CompositeLineage input) {
-        return isNonEmptyMessage(input.getJobInformation())
-            && isNonEmptyMessage(input.getTableLineage())
-            && !isNonMonitoredTable(input.getTableLineage());
-      }
-
-      private boolean isNonMonitoredTable(TableLineage tableLineage) {
-        return
-            Streams.concat(
-                Stream.of(tableLineage.getTarget()),
-                tableLineage.getParentsList().stream())
-                .map(nonMonitoredTables::contains)
-                .reduce(Boolean::logicalOr)
-                .orElse(false);
-      }
-    };
+  private SerializableFunction<CompositeLineage, Boolean> checkNonEmptyLineage() {
+    return input ->
+        isNonEmptyMessage(input.getJobInformation()) &&
+            isNonEmptyMessage(input.getTableLineage());
   }
 
   /**
@@ -110,10 +79,9 @@ public abstract class LineageExtractionTransform extends
     @ProcessElement
     public void extract(@Element String messageJson, OutputReceiver<CompositeLineage> out) {
       out.output(
-          new LineageExtractorIdentifier(getClock(), messageJson, getZetaSqlSchemaLoaderFactory())
-              .identify()
+          new InsertJobTableLineageExtractor(getClock(), JsonMessageParser.of(messageJson),
+              getZetaSqlSchemaLoaderFactory())
               .extract());
-
     }
   }
 
@@ -130,7 +98,7 @@ public abstract class LineageExtractionTransform extends
 
   public static Builder builder() {
     return new AutoValue_LineageExtractionTransform.Builder()
-        .setNonMonitoredTables(ImmutableList.of());
+        .setZetaSqlSchemaLoaderFactory(emptyLoaderFactory());
   }
 
   abstract Builder toBuilder();
@@ -139,8 +107,6 @@ public abstract class LineageExtractionTransform extends
   public abstract static class Builder {
 
     public abstract Builder setOutputLineageTable(BigQueryTableEntity newLineageTable);
-
-    public abstract Builder setNonMonitoredTables(List<String> nonMonitoredTables);
 
     public abstract Builder setClock(@Nullable Clock newClock);
 
@@ -158,7 +124,7 @@ public abstract class LineageExtractionTransform extends
 
       if (transformObj.getZetaSqlSchemaLoaderFactory() == null) {
         transformObj = transformObj.toBuilder()
-            .setZetaSqlSchemaLoaderFactory(ZetaSqlSchemaLoaderFactory.emptyLoaderFactory()).build();
+            .setZetaSqlSchemaLoaderFactory(emptyLoaderFactory()).build();
       }
 
       return transformObj;

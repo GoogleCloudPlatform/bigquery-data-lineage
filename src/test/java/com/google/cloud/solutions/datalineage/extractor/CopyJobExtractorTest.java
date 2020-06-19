@@ -38,6 +38,14 @@ public final class CopyJobExtractorTest {
   }
 
   @Test
+  public void extract_copyTempTable_empty() {
+    assertThat(
+        new CopyJobExtractor(TestResourceLoader.load("bq_query_copy_destination_temp_table.json"))
+            .extract())
+        .isEqualTo(CompositeLineage.getDefaultInstance());
+  }
+
+  @Test
   public void extract_copyJob_valid() {
     assertThat(
         new CopyJobExtractor(

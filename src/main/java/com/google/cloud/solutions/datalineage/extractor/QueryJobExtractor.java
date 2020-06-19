@@ -69,8 +69,9 @@ public final class QueryJobExtractor extends LineageExtractor {
         .setTableLineage(
             TableLineage.newBuilder()
                 .setOperation("QUERY_JOB")
-                .setTarget(DataEntityConvertible
-                    .convert(fromBigQueryResource(metadata().read(QUERY_DESTINATION_TABLE))))
+                .setTarget(
+                    DataEntityConvertible
+                        .convert(fromBigQueryResource(metadata().read(QUERY_DESTINATION_TABLE))))
                 .addAllParents(extractReferencedTables())
                 .build())
         .addAllColumnsLineage(extractColumnLineage())

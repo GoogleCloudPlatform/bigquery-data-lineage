@@ -64,7 +64,7 @@ public final class PolicyPropagationPipeline {
       compositeLineage
           .apply("Identify Policy Tags for Destination Table",
               PolicyTagsPropagationTransform.builder()
-                  .withNullableMonitoredPolicyTags(options.getMonitoredPolicyTags())
+                  .monitoredPolicyTags(options.getMonitoredPolicyTags())
                   .bigQueryServiceFactory(BigQueryServiceFactory.defaultFactory())
                   .build())
           .apply("Write Policy Tags to BigQuery",

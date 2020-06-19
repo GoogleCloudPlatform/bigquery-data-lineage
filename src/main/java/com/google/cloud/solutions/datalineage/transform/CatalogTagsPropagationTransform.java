@@ -25,7 +25,6 @@ import com.google.cloud.solutions.datalineage.service.DataCatalogService;
 import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.FluentLogger;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import org.apache.beam.sdk.transforms.DoFn;
@@ -58,14 +57,16 @@ public abstract class CatalogTagsPropagationTransform
               @Element CompositeLineage lineage,
               OutputReceiver<TagsForCatalog> out) {
             try {
-              out.output(
-                  LineageTagPropagationConverterFactory.builder()
-                      .lineage(lineage)
-                      .monitoredSourceTags(monitoredSourceTags())
-                      .dataCatalogService(DataCatalogService.usingStub(catalogStub()))
-                      .build()
-                      .processor()
-                      .propagationTags());
+              TagsForCatalog tags = LineageTagPropagationConverterFactory.builder()
+                  .lineage(lineage)
+                  .monitoredSourceTags(monitoredSourceTags())
+                  .dataCatalogService(DataCatalogService.usingStub(catalogStub()))
+                  .build()
+                  .processor()
+                  .propagationTags();
+              if (!tags.getTagsJson().isEmpty()) {
+                out.output(tags);
+              }
             } catch (Exception exception) {
               logger.atWarning().withCause(exception)
                   .atMostEvery(1, TimeUnit.MINUTES)
@@ -80,8 +81,12 @@ public abstract class CatalogTagsPropagationTransform
 
   public static CatalogTagsPropagationTransform.Builder forMonitoredTags(
       Collection<String> newMonitoredSourceTags) {
-    return builder()
-        .withNullableMonitoredSourceTags(ImmutableList.copyOf(newMonitoredSourceTags));
+
+    if (newMonitoredSourceTags != null) {
+      return builder().monitoredSourceTags(ImmutableList.copyOf(newMonitoredSourceTags));
+    }
+
+    return builder();
   }
 
   public static Builder builder() {
@@ -93,18 +98,9 @@ public abstract class CatalogTagsPropagationTransform
   @AutoValue.Builder
   public abstract static class Builder {
 
-    abstract Builder monitoredSourceTags(ImmutableList<String> newMonitoredSourceTags);
+    public abstract Builder monitoredSourceTags(ImmutableList<String> newMonitoredSourceTags);
 
     public abstract Builder catalogStub(@Nullable DataCatalogStub catalogStub);
-
-    public Builder withNullableMonitoredSourceTags(
-        List<String> monitoredSourceTags) {
-      if (monitoredSourceTags == null) {
-        return this;
-      }
-
-      return monitoredSourceTags(ImmutableList.copyOf(monitoredSourceTags));
-    }
 
     public abstract CatalogTagsPropagationTransform build();
   }

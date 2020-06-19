@@ -16,9 +16,6 @@
 
 package com.google.cloud.solutions.datalineage.extractor;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import com.google.api.client.json.JsonParser;
 import com.google.cloud.solutions.datalineage.converter.MessageParser;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.CompositeLineage;
 
@@ -46,34 +43,6 @@ public abstract class LineageExtractor {
   public abstract CompositeLineage extract();
 
   protected final MessageParser metadata() {
-    return new MetaDataParser();
-  }
-
-  /**
-   * A thin wrapper on {@link JsonParser} to extract information from Metadata section of the Json.
-   * This makes it efficient for parsing metadata instead of creating a complete new parser by
-   * unmarshalling and re-marshalling metadata section.
-   */
-  public class MetaDataParser implements MessageParser {
-
-    @Override
-    public <T> T read(String path) {
-      return messageParser.read(buildMetaPath(path));
-    }
-
-    @Override
-    public <T> T readOrDefault(String path, T defaultValue) {
-      return messageParser.readOrDefault(buildMetaPath(path), defaultValue);
-    }
-
-    @Override
-    public boolean containsKey(String keyPath) {
-      return messageParser.containsKey(buildMetaPath(keyPath));
-    }
-
-    private String buildMetaPath(String path) {
-      checkArgument(path.startsWith("$."));
-      return METADATA_PATH + "." + path.replaceFirst("^\\$\\.", "");
-    }
+    return messageParser.forSubNode(METADATA_PATH);
   }
 }
