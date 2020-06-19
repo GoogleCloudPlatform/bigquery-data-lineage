@@ -48,7 +48,7 @@ public abstract class CloudStorageFile implements DataEntityConvertible, Seriali
 
   public static CloudStorageFile create(String fileName) {
 
-    Matcher matcher = Pattern.compile("^gs://(?<bucket>[^/]+)/(?<file>.*)$").matcher(fileName);
+    Matcher matcher = Pattern.compile("^gs://(?<bucket>[^/]+)/(?<file>.+)$").matcher(fileName);
 
     if (!matcher.find()) {
       throw new IllegalArgumentException(

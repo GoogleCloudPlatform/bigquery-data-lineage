@@ -80,4 +80,13 @@ public final class LineageExtractorIdentifierTest {
         .isInstanceOf(NoOpExtractor.class);
   }
 
+  @Test
+  public void identify_tableDeleteJob_noOpExtractor() {
+    assertThat(
+        LineageExtractorIdentifier.of(
+            TestResourceLoader.load("bq_delete_table_message.json"))
+            .identify())
+        .isInstanceOf(NoOpExtractor.class);
+  }
+
 }

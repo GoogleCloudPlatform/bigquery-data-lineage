@@ -71,19 +71,10 @@ public final class PolicyPropagationPipelineTest {
             .apply(
                 CatalogTagsPropagationTransform
                     .builder()
-                    //No Monitored Tags
-                    .withNullableMonitoredSourceTags(ImmutableList.of())
                     .catalogStub(fakeStub)
                     .build());
 
-    PAssert.that(tags)
-        .containsInAnyOrder(
-            TagsForCatalog
-                .builder()
-                .setEntryId(
-                    "projects/myproject1/locations/us/entryGroups/@bigquery/entries/OutputTableId")
-                .setTagsJson(ImmutableList.of())
-                .build());
+    PAssert.that(tags).empty();
 
     testPipeline.run();
   }
@@ -127,6 +118,33 @@ public final class PolicyPropagationPipelineTest {
   }
 
   @Test
+  public void tagPropagation_nullMonitoredTags_empty() {
+    FakeDataCatalogStub fakeStub = FakeDataCatalogStub.buildWithTestData(
+        ImmutableList.of("datacatalog-objects/TableA_entry.json",
+            "datacatalog-objects/simple_report_view_entry.json",
+            "datacatalog-objects/OutputTable_entry.json"),
+        ImmutableList.of(
+            "datacatalog-objects/TableA_tags.json",
+            "datacatalog-objects/simple_report_view_tags.json"));
+
+    PCollection<TagsForCatalog> tags =
+        testPipeline
+            .apply(Create.of(
+                parseJson(TestResourceLoader.load(
+                    "composite-lineages/complete_composite_lineage_tableA_simple_report_view_outputTable.json"),
+                    CompositeLineage.class)))
+            .apply(
+                CatalogTagsPropagationTransform
+                    .forMonitoredTags(null)
+                    .catalogStub(fakeStub)
+                    .build());
+
+    PAssert.that(tags).empty();
+
+    testPipeline.run();
+  }
+
+  @Test
   public void policyTagsPropagationTransform_emptyMonitoredTags_empty() {
     String[] tableSchemas = new String[]{
         TestResourceLoader.load("schemas/CorePii_schema.json"),
@@ -143,7 +161,6 @@ public final class PolicyPropagationPipelineTest {
         testPipeline
             .apply(Create.of(testLineage))
             .apply(PolicyTagsPropagationTransform.builder()
-                .withNullableMonitoredPolicyTags(ImmutableList.of())
                 .bigQueryServiceFactory(FakeBigQueryServiceFactory.forTableSchemas(tableSchemas))
                 .build());
 
@@ -169,7 +186,7 @@ public final class PolicyPropagationPipelineTest {
         testPipeline
             .apply(Create.of(testLineage))
             .apply(PolicyTagsPropagationTransform.builder()
-                .withNullableMonitoredPolicyTags(ImmutableList.of(
+                .monitoredPolicyTags(ImmutableList.of(
                     "projects/GovernanceProject/locations/us/taxonomies/8150274556907504807/policyTags/1234",
                     "projects/GovernanceProject/locations/us/taxonomies/8150274556907504807/policyTags/7890"))
                 .bigQueryServiceFactory(FakeBigQueryServiceFactory.forTableSchemas(tableSchemas))
@@ -299,9 +316,8 @@ public final class PolicyPropagationPipelineTest {
         testPipeline
             .apply(Create.of(testLineage))
             .apply(PolicyTagsPropagationTransform.builder()
-                .withNullableMonitoredPolicyTags(ImmutableList.of(
-                    "projects/bq-lineage-demo/locations/us/taxonomies/544279842572406327/policyTags/2123206183673327057"
-                ))
+                .monitoredPolicyTags(ImmutableList.of(
+                    "projects/bq-lineage-demo/locations/us/taxonomies/544279842572406327/policyTags/2123206183673327057"))
                 .bigQueryServiceFactory(FakeBigQueryServiceFactory.forTableSchemas(tableSchemas))
                 .build());
 

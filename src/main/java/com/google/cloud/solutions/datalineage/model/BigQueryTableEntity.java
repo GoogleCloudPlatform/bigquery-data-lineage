@@ -33,10 +33,6 @@ public abstract class BigQueryTableEntity implements DataEntityConvertible, Seri
 
   public abstract String getTable();
 
-  public final String getId() {
-    return getLegacySqlName();
-  }
-
   /**
    * Returns {@code true} if the table is a temporary table.
    * <p> It uses rule dataset name starts with '_' or table name starts with '_' or 'anon'.
@@ -45,10 +41,6 @@ public abstract class BigQueryTableEntity implements DataEntityConvertible, Seri
     return getDataset().startsWith("_")
         || getTable().startsWith("_")
         || getTable().startsWith("anon");
-  }
-
-  public final boolean isEmpty() {
-    return getTable().isEmpty();
   }
 
   public static Builder builder() {
@@ -83,10 +75,6 @@ public abstract class BigQueryTableEntity implements DataEntityConvertible, Seri
 
   public String getStandSqlName() {
     return String.format("%s.%s.%s", getProjectId(), getDataset(), getTable());
-  }
-
-  public String getNameWithDataset() {
-    return String.format("%s.%s", getDataset(), getTable());
   }
 
   @AutoValue.Builder

@@ -69,17 +69,9 @@ public abstract class PolicyTagsPropagationTransform extends
   @AutoValue.Builder
   public abstract static class Builder {
 
-    abstract Builder monitoredPolicyTags(List<String> monitoredPolicyTags);
+    public abstract Builder monitoredPolicyTags(List<String> monitoredPolicyTags);
 
     public abstract Builder bigQueryServiceFactory(BigQueryServiceFactory bigQueryServiceFactory);
-
-    public Builder withNullableMonitoredPolicyTags(List<String> monitoredPolicyTags) {
-      if (monitoredPolicyTags == null) {
-        return this;
-      }
-
-      return monitoredPolicyTags(ImmutableList.copyOf(monitoredPolicyTags));
-    }
 
     public abstract PolicyTagsPropagationTransform build();
   }

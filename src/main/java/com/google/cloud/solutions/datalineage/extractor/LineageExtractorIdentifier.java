@@ -25,7 +25,6 @@ import java.time.Clock;
 public final class LineageExtractorIdentifier {
 
   private static final String LAST_OPERATION_FLAG_PATH = "$.operation.last";
-  private static final String JOB_METHOD_TYPE_PATH = "$.protoPayload.methodName";
   private static final String JOB_STATE_PATH = "$.protoPayload.metadata.jobChange.job.jobStatus.jobState";
   private static final String JOB_STATUS_ERRORS_PATH = "$.protoPayload.metadata.jobChange.job.jobStatus.errors";
   private final JsonMessageParser parser;
@@ -62,15 +61,7 @@ public final class LineageExtractorIdentifier {
       return NoOpExtractor.getInstance();
     }
 
-    // This If can be expanded into a switch statement to support more Job types.
-    if ("google.cloud.bigquery.v2.JobService.InsertJob".equals(extractJobType())) {
-      return new InsertJobTableLineageExtractor(clock, parser, schemaLoaderFactory);
-    }
-    return NoOpExtractor.getInstance();
-  }
-
-  private String extractJobType() {
-    return parser.readOrDefault(JOB_METHOD_TYPE_PATH, "");
+    return new InsertJobTableLineageExtractor(clock, parser, schemaLoaderFactory);
   }
 
   private boolean isJobSuccessful() {

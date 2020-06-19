@@ -1,0 +1,44 @@
+{
+  "protoPayload": {
+    "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+    "status": {},
+    "authenticationInfo": {
+      "principalEmail": "anantd@altostrat.com"
+    },
+    "requestMetadata": {
+      "callerIp": "103.252.203.40",
+      "callerSuppliedUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36,gzip(gfe)",
+      "requestAttributes": {},
+      "destinationAttributes": {}
+    },
+    "serviceName": "bigquery.googleapis.com",
+    "methodName": "google.cloud.bigquery.v2.TableService.DeleteTable",
+    "authorizationInfo": [
+      {
+        "resource": "projects/bigquery-lineage-demo/datasets/MyDataSet/tables/ExtractedPartnerInformation",
+        "permission": "bigquery.tables.delete",
+        "granted": true,
+        "resourceAttributes": {}
+      }
+    ],
+    "resourceName": "projects/bigquery-lineage-demo/datasets/MyDataSet/tables/ExtractedPartnerInformation",
+    "metadata": {
+      "@type": "type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata",
+      "tableDeletion": {
+        "reason": "TABLE_DELETE_REQUEST"
+      }
+    }
+  },
+  "insertId": "-x0lp5le502tv",
+  "resource": {
+    "type": "bigquery_dataset",
+    "labels": {
+      "dataset_id": "MyDataSet",
+      "project_id": "bigquery-lineage-demo"
+    }
+  },
+  "timestamp": "2020-06-19T05:44:08.818Z",
+  "severity": "NOTICE",
+  "logName": "projects/bigquery-lineage-demo/logs/cloudaudit.googleapis.com%2Factivity",
+  "receiveTimestamp": "2020-06-19T05:44:08.914213138Z"
+}
