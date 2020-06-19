@@ -209,12 +209,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava-testlib</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>com.google.truth.extensions</groupId>
       <artifactId>truth-java8-extension</artifactId>
       <version>1.0.1</version>
@@ -317,6 +311,8 @@
           <excludes>
             <exclude>com/google/cloud/solutions/datalineage/model/LineageMessages*</exclude>
             <exclude>**/AutoValue*</exclude>
+            <exclude>com/google/cloud/solutions/datalineage/*Pipeline*</exclude>
+            <exclude>com/google/cloud/solutions/datalineage/writer/*</exclude>
           </excludes>
         </configuration>
         <executions>
