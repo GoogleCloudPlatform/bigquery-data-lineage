@@ -59,9 +59,9 @@ public abstract class LineageExtractionTransform extends
    * and the target table is not the Lineage Output BigQuery table.
    */
   private SerializableFunction<CompositeLineage, Boolean> checkNonEmptyLineage() {
-    return (SerializableFunction<CompositeLineage, Boolean>) input ->
-        isNonEmptyMessage(input.getJobInformation())
-            && isNonEmptyMessage(input.getTableLineage());
+    return input ->
+        isNonEmptyMessage(input.getJobInformation()) &&
+            isNonEmptyMessage(input.getTableLineage());
   }
 
   /**
