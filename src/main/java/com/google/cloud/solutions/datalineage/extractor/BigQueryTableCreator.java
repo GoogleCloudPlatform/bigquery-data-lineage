@@ -17,6 +17,9 @@
 package com.google.cloud.solutions.datalineage.extractor;
 
 import com.google.cloud.solutions.datalineage.model.BigQueryTableEntity;
+import com.google.common.collect.ImmutableList;
+import com.google.common.flogger.FluentLogger;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,19 +28,32 @@ import java.util.regex.Pattern;
  */
 public abstract class BigQueryTableCreator {
 
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
   /**
    * Matches the given String as a Legacy or Standard Table name. If no match found, it returns a
    *
-   * @param standardOrLegacyName the table name in legacy or standard SQL format.
+   * @param bigQueryTableName the table name in legacy or standard SQL format.
    * @return Table information with valid values or if no match found then tableName set as the
    * input String or empty table name.
    */
-  public static BigQueryTableEntity usingBestEffort(String standardOrLegacyName) {
-    if (standardOrLegacyName != null && standardOrLegacyName.startsWith("$")) {
-      return BigQueryTableEntity.create(null, null, standardOrLegacyName);
+  public static BigQueryTableEntity usingBestEffort(String bigQueryTableName) {
+    if (bigQueryTableName != null && bigQueryTableName.startsWith("$")) {
+      return BigQueryTableEntity.create(null, null, bigQueryTableName);
     }
 
-    return extractInformation(BQ_LEGACY_STANDARD_TABLE_NAME_FORMAT, standardOrLegacyName);
+    for (String pattern : ImmutableList
+        .of(BQ_LEGACY_STANDARD_TABLE_NAME_FORMAT, BQ_RESOURCE_FORMAT, BQ_LINKED_RESOURCE_FORMAT)) {
+      try {
+        return extractInformation(pattern, bigQueryTableName);
+      } catch (IllegalArgumentException aex) {
+        logger.atInfo().atMostEvery(1, TimeUnit.MINUTES).withCause(aex)
+            .log("error parsing %s", bigQueryTableName);
+      }
+    }
+
+    throw new IllegalArgumentException(
+        "Couldn't convert into any known types: (" + bigQueryTableName + ")");
   }
 
   /**
@@ -54,6 +70,10 @@ public abstract class BigQueryTableCreator {
 
   public static BigQueryTableEntity fromBigQueryResource(String resource) {
     return extractInformation(BQ_RESOURCE_FORMAT, resource);
+  }
+
+  public static BigQueryTableEntity fromLinkedResource(String linkedResource) {
+    return extractInformation(BQ_LINKED_RESOURCE_FORMAT, linkedResource);
   }
 
   private static final String PROJECT_ID_TAG = "projectId";
@@ -79,7 +99,13 @@ public abstract class BigQueryTableCreator {
 
   private static final String BQ_RESOURCE_FORMAT =
       String.format(
-          "projects/(?<%s>%s)/datasets/(?<%s>%s)/tables/(?<%s>%s)$",
+          "^projects/(?<%s>%s)/datasets/(?<%s>%s)/tables/(?<%s>%s)$",
+          PROJECT_ID_TAG, PROJECT_PATTERN, DATASET_ID_TAG, DATASET_PATTERN, TABLE_ID_TAG,
+          TABLE_PATTERN);
+
+  private static final String BQ_LINKED_RESOURCE_FORMAT =
+      String.format(
+          "^//bigquery.googleapis.com/projects/(?<%s>%s)/datasets/(?<%s>%s)/tables/(?<%s>%s)$",
           PROJECT_ID_TAG, PROJECT_PATTERN, DATASET_ID_TAG, DATASET_PATTERN, TABLE_ID_TAG,
           TABLE_PATTERN);
 
@@ -88,7 +114,6 @@ public abstract class BigQueryTableCreator {
           "^(?<%s>%s)[:\\.](?<%s>%s)\\.(?<%s>%s)$",
           PROJECT_ID_TAG, PROJECT_PATTERN, DATASET_ID_TAG, DATASET_PATTERN, TABLE_ID_TAG,
           TABLE_PATTERN);
-
 
   private static BigQueryTableEntity extractInformation(String pattern, String resource) {
     Matcher matcher = Pattern.compile(pattern).matcher(resource);

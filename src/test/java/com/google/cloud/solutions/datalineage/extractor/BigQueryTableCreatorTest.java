@@ -18,7 +18,9 @@ package com.google.cloud.solutions.datalineage.extractor;
 
 import static com.google.cloud.solutions.datalineage.extractor.BigQueryTableCreator.fromBigQueryResource;
 import static com.google.cloud.solutions.datalineage.extractor.BigQueryTableCreator.fromLegacyTableName;
+import static com.google.cloud.solutions.datalineage.extractor.BigQueryTableCreator.fromLinkedResource;
 import static com.google.cloud.solutions.datalineage.extractor.BigQueryTableCreator.fromSqlResource;
+import static com.google.cloud.solutions.datalineage.extractor.BigQueryTableCreator.usingBestEffort;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
@@ -259,7 +261,7 @@ public final class BigQueryTableCreatorTest {
                 /*table=*/ "Lineage_table"));
   }
 
-  // BigQuery Resource format
+  // BigQuery Linked Resource format
   @Test
   public void fromBqResource_projectIfWithNumber_valid() {
     assertThat(fromBigQueryResource(
@@ -388,5 +390,188 @@ public final class BigQueryTableCreatorTest {
 
     assertThat(illegalArgumentException).hasMessageThat().startsWith(
         "input (projects/test-project/datasets/audit_dataset/tables/lineage-table) not in correct format");
+  }
+
+  // BigQuery Linked Resource format
+  @Test
+  public void fromLinkedResource_projectIdWithNumber_valid() {
+    assertThat(fromLinkedResource(
+        "//bigquery.googleapis.com/projects/example.co.in:test-project-2/datasets/audit_dataset/tables/Lineage_table"))
+        .isEqualTo(
+            BigQueryTableEntity.create(
+                /*projectId=*/ "example.co.in:test-project-2",
+                /*dataset=*/ "audit_dataset",
+                /*table=*/ "Lineage_table"));
+  }
+
+  @Test
+  public void fromLinkedResource_TableWithUppercaseStarting_valid() {
+    assertThat(fromLinkedResource(
+        "//bigquery.googleapis.com/projects/example.co.in:test-project/datasets/audit_dataset/tables/Lineage_table"))
+        .isEqualTo(
+            BigQueryTableEntity.create(
+                /*projectId=*/ "example.co.in:test-project",
+                /*dataset=*/ "audit_dataset",
+                /*table=*/ "Lineage_table"));
+  }
+
+  @Test
+  public void fromLinkedResource_DatasetWithUppercaseStarting_valid() {
+    assertThat(fromLinkedResource(
+        "//bigquery.googleapis.com/projects/example.co.in:test-project/datasets/AuditDataset/tables/Lineage_table"))
+        .isEqualTo(
+            BigQueryTableEntity.create(
+                /*projectId=*/ "example.co.in:test-project",
+                /*dataset=*/ "AuditDataset",
+                /*table=*/ "Lineage_table"));
+  }
+
+
+  @Test
+  public void fromLinkedResource_doesNotStartWithProjectsLiteral_throwsException() {
+    IllegalArgumentException illegalArgumentException =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> fromLinkedResource("example.co.in:test_project.audit_dataset.lineage"));
+
+    assertThat(illegalArgumentException).hasMessageThat().startsWith(
+        "input (example.co.in:test_project.audit_dataset.lineage) not in correct format");
+  }
+
+  @Test
+  public void fromLinkedResource_projectIdWithHyphens_valid() {
+    assertThat(
+        fromLinkedResource(
+            "//bigquery.googleapis.com/projects/bq-lineage-demo/datasets/audit_dataset/tables/lineage"))
+        .isEqualTo(
+            BigQueryTableEntity.create(
+                /*projectId=*/ "bq-lineage-demo",
+                /*dataset=*/ "audit_dataset",
+                /*table=*/ "lineage"));
+  }
+
+  @Test
+  public void fromLinkedResource_projectIdWithColon_valid() {
+    assertThat(
+        fromLinkedResource(
+            "//bigquery.googleapis.com/projects/google.com:bigquery-lineage-demo/datasets/MyDataSet/tables/MyView"))
+        .isEqualTo(
+            BigQueryTableEntity.create(
+                /*projectId=*/ "google.com:bigquery-lineage-demo",
+                /*dataset=*/ "MyDataSet",
+                /*table=*/ "MyView"));
+  }
+
+  @Test
+  public void fromLinkedResource_projectIdWithColonAndHyphen_valid() {
+    assertThat(
+        fromLinkedResource(
+            "//bigquery.googleapis.com/projects/example.co.in:test-project/datasets/audit_dataset/tables/lineage"))
+        .isEqualTo(
+            BigQueryTableEntity.create(
+                /*projectId=*/ "example.co.in:test-project",
+                /*dataset=*/ "audit_dataset",
+                /*table=*/ "lineage"));
+  }
+
+  @Test
+  public void fromLinkedResource_TableWithUnderscore_valid() {
+    assertThat(
+        fromLinkedResource(
+            "//bigquery.googleapis.com/projects/example.co.in:test-project/datasets/audit_dataset/tables/lineage_table"))
+        .isEqualTo(
+            BigQueryTableEntity.create(
+                /*projectId=*/ "example.co.in:test-project",
+                /*dataset=*/ "audit_dataset",
+                /*table=*/ "lineage_table"));
+  }
+
+  @Test
+  public void fromLinkedResource_projectIdWithUnderscore_throwsException() {
+    IllegalArgumentException illegalArgumentException =
+        assertThrows(
+            IllegalArgumentException.class,
+            () ->
+                fromLinkedResource(
+                    "//bigquery.googleapis.com/projects/example.co.in:test_project/datasets/audit_dataset/tables/lineage"));
+
+    assertThat(illegalArgumentException).hasMessageThat().startsWith(
+        "input (//bigquery.googleapis.com/projects/example.co.in:test_project/datasets/audit_dataset/tables/lineage) not in correct format");
+  }
+
+  @Test
+  public void fromLinkedResource_datasetWithHyphen_throwsException() {
+    IllegalArgumentException illegalArgumentException =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> fromLinkedResource(
+                "//bigquery.googleapis.com/projects/test-project/datasets/audit-dataset/tables/lineage"));
+
+    assertThat(illegalArgumentException).hasMessageThat().startsWith(
+        "input (//bigquery.googleapis.com/projects/test-project/datasets/audit-dataset/tables/lineage) not in correct format");
+  }
+
+  @Test
+  public void fromLinkedResource_tableWithHyphen_throwsException() {
+    IllegalArgumentException illegalArgumentException =
+        assertThrows(
+            IllegalArgumentException.class,
+            () ->
+                fromLinkedResource(
+                    "//bigquery.googleapis.com/projects/test-project/datasets/audit_dataset/tables/lineage-table"));
+
+    assertThat(illegalArgumentException).hasMessageThat().startsWith(
+        "input (//bigquery.googleapis.com/projects/test-project/datasets/audit_dataset/tables/lineage-table) not in correct format");
+  }
+
+  @Test
+  public void usingBestEffort_legacySqlName_valid() {
+    assertThat(usingBestEffort("bq-lineage-demo:audit_dataset.lineage"))
+        .isEqualTo(
+            BigQueryTableEntity.create(
+                /*projectId=*/ "bq-lineage-demo",
+                /*dataset=*/ "audit_dataset",
+                /*table=*/ "lineage"));
+  }
+
+  @Test
+  public void usingBestEffort_standardSqlName_valid() {
+    assertThat(usingBestEffort("bq-lineage-demo.audit_dataset.lineage"))
+        .isEqualTo(
+            BigQueryTableEntity.create(
+                /*projectId=*/ "bq-lineage-demo",
+                /*dataset=*/ "audit_dataset",
+                /*table=*/ "lineage"));
+  }
+
+  @Test
+  public void usingBestEffort_bqResource_valid() {
+    assertThat(usingBestEffort("projects/bq-lineage-demo/datasets/audit_dataset/tables/lineage"))
+        .isEqualTo(
+            BigQueryTableEntity.create(
+                /*projectId=*/ "bq-lineage-demo",
+                /*dataset=*/ "audit_dataset",
+                /*table=*/ "lineage"));
+  }
+
+  @Test
+  public void usingBestEffort_linkedResource_valid() {
+    assertThat(usingBestEffort(
+        "//bigquery.googleapis.com/projects/bq-lineage-demo/datasets/audit_dataset/tables/lineage"))
+        .isEqualTo(
+            BigQueryTableEntity.create(
+                /*projectId=*/ "bq-lineage-demo",
+                /*dataset=*/ "audit_dataset",
+                /*table=*/ "lineage"));
+  }
+
+  @Test
+  public void usingBestEffort_unknownFormat_throwsIllegealArgumentException() {
+    IllegalArgumentException aex =
+        assertThrows(IllegalArgumentException.class,
+            () -> usingBestEffort(
+                "//xyz.googleapis.com/projects/bq-lineage-demo/datasets/audit_dataset/tables/lineage"));
+
+    assertThat(aex).hasMessageThat().startsWith("");
   }
 }
