@@ -111,7 +111,7 @@ public final class BigQueryPolicyTagService implements Serializable {
       return
           tableEntities.stream()
               .map(DataEntity::getLinkedResource)
-              .map(BigQueryTableCreator::fromBigQueryResource)
+              .map(BigQueryTableCreator::usingBestEffort)
               .map(bqTable -> readPolicyMap(bqTable, monitoredPolicyTags))
               .flatMap(t -> t.cellSet().stream())
               .collect(
