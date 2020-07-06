@@ -18,7 +18,7 @@ package com.google.cloud.solutions.datalineage.writer;
 
 import com.google.cloud.solutions.datalineage.model.TagsForCatalog;
 import com.google.cloud.solutions.datalineage.service.CatalogTagsApplicator;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
@@ -31,7 +31,7 @@ import org.apache.beam.sdk.values.PCollection;
 public final class DataCatalogWriter extends
     PTransform<PCollection<TagsForCatalog>, PCollection<Void>> {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   @Override
   public PCollection<Void> expand(PCollection<TagsForCatalog> input) {

@@ -29,7 +29,7 @@ import com.google.cloud.solutions.datalineage.model.LineageMessages.TableLineage
 import com.google.cloud.solutions.datalineage.service.ZetaSqlSchemaLoaderFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import com.google.zetasql.SqlException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class QueryJobExtractor extends LineageExtractor {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
   private static final String QUERY_REFERENCED_TABLES = "$.jobChange.job.jobStats.queryStats.referencedTables";
   private static final String QUERY_SQL_PATH = "$.jobChange.job.jobConfig.queryConfig.query";
   private static final String QUERY_DESTINATION_TABLE = "$.jobChange.job.jobConfig.queryConfig.destinationTable";

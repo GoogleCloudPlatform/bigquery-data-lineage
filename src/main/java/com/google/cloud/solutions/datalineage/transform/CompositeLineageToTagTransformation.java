@@ -25,7 +25,7 @@ import com.google.cloud.solutions.datalineage.model.LineageMessages.CompositeLin
 import com.google.cloud.solutions.datalineage.model.LineageMessages.DataEntity;
 import com.google.cloud.solutions.datalineage.model.TagsForCatalog;
 import com.google.cloud.solutions.datalineage.service.DataCatalogService;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import org.apache.beam.sdk.transforms.DoFn;
@@ -41,7 +41,7 @@ import org.apache.beam.sdk.values.PCollection;
 public abstract class CompositeLineageToTagTransformation extends
     PTransform<PCollection<CompositeLineage>, PCollection<TagsForCatalog>> {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   public abstract String lineageTagTemplateId();
 

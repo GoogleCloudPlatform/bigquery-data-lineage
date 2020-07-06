@@ -21,7 +21,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
 import com.google.protobuf.MessageOrBuilder;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  */
 public final class ProtoJsonConverter {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   /**
    * Returns the Object serialized as JSON using Jackson ObjectWriter or Protobuf JsonFormat if the

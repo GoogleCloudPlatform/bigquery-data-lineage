@@ -38,7 +38,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table.Cell;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
 import java.io.Serializable;
@@ -55,7 +55,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class BigQueryPolicyTagService implements Serializable {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
   private static final String POLICY_TAG_FIELD_NAME = "policyTags";
   private static final String POLICY_IDS_FIELD_NAME = "names";
   private static final String POLICY_TAG_IDS_JSON_PATH = "$." + POLICY_IDS_FIELD_NAME + "[*]";

@@ -21,7 +21,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import com.google.cloud.solutions.datalineage.model.QueryColumns;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import com.google.zetasql.Analyzer;
 import com.google.zetasql.AnalyzerOptions;
 import com.google.zetasql.SimpleCatalog;
@@ -36,7 +36,7 @@ import java.util.Optional;
  */
 public final class ColumnLineageExtractorFactory {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   /**
    * Statement to be used for instantiating {@link ColumnLineageExtractor} during registration.
