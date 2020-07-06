@@ -18,7 +18,7 @@ package com.google.cloud.solutions.datalineage.extractor;
 
 import com.google.cloud.solutions.datalineage.model.BigQueryTableEntity;
 import com.google.common.collect.ImmutableList;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  */
 public abstract class BigQueryTableCreator {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   /**
    * Matches the given String as a Legacy or Standard Table name. If no match found, it returns a

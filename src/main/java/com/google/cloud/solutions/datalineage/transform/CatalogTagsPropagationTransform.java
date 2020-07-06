@@ -23,7 +23,7 @@ import com.google.cloud.solutions.datalineage.model.LineageMessages.CompositeLin
 import com.google.cloud.solutions.datalineage.model.TagsForCatalog;
 import com.google.cloud.solutions.datalineage.service.DataCatalogService;
 import com.google.common.collect.ImmutableList;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
@@ -40,7 +40,7 @@ import org.apache.beam.sdk.values.PCollection;
 public abstract class CatalogTagsPropagationTransform
     extends PTransform<PCollection<CompositeLineage>, PCollection<TagsForCatalog>> {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   public abstract ImmutableList<String> monitoredSourceTags();
 

@@ -25,7 +25,7 @@ import com.google.cloud.datacatalog.v1beta1.stub.DataCatalogStub;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.DataEntity;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableTable;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import com.google.protobuf.FieldMask;
 import java.io.IOException;
 import java.util.Collection;
@@ -41,7 +41,7 @@ import java.util.stream.StreamSupport;
  */
 public class DataCatalogService {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   private final DataCatalogClient dataCatalogClient;
 

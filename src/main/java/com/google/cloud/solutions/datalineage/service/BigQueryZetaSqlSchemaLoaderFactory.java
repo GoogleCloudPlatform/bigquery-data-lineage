@@ -16,7 +16,7 @@
 
 package com.google.cloud.solutions.datalineage.service;
 
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class BigQueryZetaSqlSchemaLoaderFactory implements ZetaSqlSchemaLoaderFactory {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   private final BigQueryServiceFactory bigQueryServiceFactory;
 

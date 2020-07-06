@@ -22,7 +22,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import com.google.cloud.solutions.datalineage.converter.MessageParser;
 import com.google.common.base.Objects;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class JsonMessageParser implements MessageParser {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   private final String messageJson;
   private final DocumentContext parsedMessage;

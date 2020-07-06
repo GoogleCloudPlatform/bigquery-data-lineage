@@ -28,7 +28,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.Duration;
@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class BigQueryTableLoadService implements Serializable {
 
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   private final BigQueryServiceFactory bqServiceFactory;
   private static final Cache<BigQueryTableEntity, Table> LOCAL_CACHE = buildCache();
