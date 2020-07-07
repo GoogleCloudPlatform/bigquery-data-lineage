@@ -46,7 +46,7 @@ public abstract class BigQueryPolicyTagsWriter extends
             BigQueryPolicyTagService.usingServiceFactory(bigQueryServiceFactory())
                 .updatePoliciesForTable(
                     BigQueryTableCreator
-                        .fromBigQueryResource(targetTags.getTable().getLinkedResource()))
+                        .usingBestEffort(targetTags.getTable().getLinkedResource()))
                 .withPolicies(targetTags.getPolicyTagsList())
                 .apply();
           }
