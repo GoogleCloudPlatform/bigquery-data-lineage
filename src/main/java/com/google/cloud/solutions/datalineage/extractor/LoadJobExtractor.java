@@ -58,7 +58,11 @@ public final class LoadJobExtractor extends LineageExtractor {
   }
 
   private ImmutableSet<DataEntity> extractSources() {
-    return metadata().<List<String>>read(LOAD_SOURCE_TABLES).stream()
+    List<String> tables = metadata().read(LOAD_SOURCE_TABLES);
+    if(tables == null) {
+      return ImmutableSet.of();
+    }
+    return tables.stream()
         .map(CloudStorageFile::create).map(
             DataEntityConvertible::dataEntity).collect(toImmutableSet());
 
