@@ -16,7 +16,9 @@
 
 package com.google.cloud.solutions.datalineage.testing;
 
-import com.google.gson.JsonParser;
+import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
+
+import org.json.JSONException;
 
 /**
  * Provides assert for JSON comparison using Google's Gson library.
@@ -36,14 +38,12 @@ public final class JsonAssert {
           String.format("expected (%s) or actual (%s) is null", expected, actual));
     }
 
-    if (!JsonParser.parseString(actual).equals(JsonParser.parseString(expected))) {
-      String assertionMessage = String
-          .format("JSON mismatch%nactual:%n%s%ndoes not match expected:%n%s", actual, expected);
-      throw new AssertionError(assertionMessage);
+    try {
+      assertEquals(expected, actual, /*strict=*/ false);
+    } catch (JSONException jsonException) {
+      throw new AssertionError("Invalid JSON", jsonException);
     }
   }
 
-  private JsonAssert() {
-  }
-
+  private JsonAssert() {}
 }

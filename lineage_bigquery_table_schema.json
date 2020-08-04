@@ -33,6 +33,20 @@
         "type": "STRING",
         "mode": "NULLABLE",
         "description": "The email address of the authorized executor of Job, It can be a person or a service account."
+      },
+      {
+        "name": "transform",
+        "type": "RECORD",
+        "mode": "NULLABLE",
+        "description": "The transform operations done on source data. E.g. A SQL query or pipeline version information etc.",
+        "fields": [
+          {
+            "name": "sql",
+            "type": "STRING",
+            "mode": "NULLABLE",
+            "description": "The BigQuery or Dataflow SQL if that was the transformation operation."
+          }
+        ]
       }
     ]
   },

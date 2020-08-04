@@ -32,7 +32,8 @@ public final class InsertJobTableLineageExtractor extends LineageExtractor {
   private static final String JOB_ID = "$.protoPayload.resourceName";
   private static final String JOB_TYPE = "$.protoPayload.metadata.jobChange.job.jobConfig.type";
   private static final String TIMESTAMP = "$.timestamp";
-  private static final String PRINCIPAL_EMAIL_PATH = "$.protoPayload.authenticationInfo.principalEmail";
+  private static final String PRINCIPAL_EMAIL_PATH =
+      "$.protoPayload.authenticationInfo.principalEmail";
   private final Clock clock;
   private final ZetaSqlSchemaLoaderFactory zetaSqlSchemaLoaderFactory;
 
@@ -57,13 +58,16 @@ public final class InsertJobTableLineageExtractor extends LineageExtractor {
   public CompositeLineage extract() {
     CompositeLineage lineage = identifyExtractor().extract();
 
-    return (CompositeLineage.getDefaultInstance().equals(lineage)) ? lineage :
-        addJobInformation(lineage);
+    return (CompositeLineage.getDefaultInstance().equals(lineage))
+        ? lineage
+        : addJobInformation(lineage);
   }
 
   private CompositeLineage addJobInformation(CompositeLineage lineage) {
-    return lineage.toBuilder().setJobInformation(buildJobInformation())
-        .setReconcileTime(Instant.now(clock).toEpochMilli()).build();
+    return lineage.toBuilder()
+        .setJobInformation(buildJobInformation(lineage.getJobInformation()))
+        .setReconcileTime(Instant.now(clock).toEpochMilli())
+        .build();
   }
 
   /**
@@ -91,12 +95,19 @@ public final class InsertJobTableLineageExtractor extends LineageExtractor {
    * Return a filled JobInformation by parsing the principal, job end time and present time as
    * reconcile time.
    */
-  private JobInformation buildJobInformation() {
-    return JobInformation.newBuilder()
-        .setActuator(extractActuator())
-        .setJobId(extractJobId())
-        .setJobTime(extractTimestamp().toEpochMilli())
-        .build();
+  private JobInformation buildJobInformation(JobInformation partialJobInformation) {
+    JobInformation basicJobInformation =
+        JobInformation.newBuilder()
+            .setActuator(extractActuator())
+            .setJobId(extractJobId())
+            .setJobTime(extractTimestamp().toEpochMilli())
+            .build();
+
+    if (partialJobInformation != null) {
+      return partialJobInformation.toBuilder().mergeFrom(basicJobInformation).build();
+    }
+
+    return basicJobInformation;
   }
 
   private String extractActuator() {
@@ -115,5 +126,4 @@ public final class InsertJobTableLineageExtractor extends LineageExtractor {
   private String extractJobType() {
     return messageParser.readOrDefault(JOB_TYPE, EMPTY_STRING);
   }
-
 }

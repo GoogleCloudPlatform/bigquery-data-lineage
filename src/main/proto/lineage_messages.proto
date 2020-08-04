@@ -13,6 +13,12 @@ message JobInformation {
   int64 jobTime = 2;
   string jobType = 5;
   string actuator = 10;
+  TransformInformation transform = 15;
+}
+
+message TransformInformation {
+  string sql = 1;
+  // Extendable information to capture software versions etc. add fields like Pipeline version etc.
 }
 
 message TableLineage {

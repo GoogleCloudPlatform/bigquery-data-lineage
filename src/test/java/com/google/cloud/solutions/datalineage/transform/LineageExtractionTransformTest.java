@@ -24,6 +24,7 @@ import com.google.cloud.solutions.datalineage.model.LineageMessages.DataEntity;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.DataEntity.DataEntityTypes;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.JobInformation;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.TableLineage;
+import com.google.cloud.solutions.datalineage.model.LineageMessages.TransformInformation;
 import com.google.cloud.solutions.datalineage.service.BigQueryZetaSqlSchemaLoaderFactory;
 import com.google.cloud.solutions.datalineage.service.ZetaSqlSchemaLoaderFactory;
 import com.google.cloud.solutions.datalineage.testing.FakeBigQueryServiceFactory;
@@ -49,14 +50,14 @@ public final class LineageExtractionTransformTest {
   @Test
   public void expand_singleTableQuery_validLineage() {
     Clock fixedClock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
-    BigQueryTableEntity lineageTable = BigQueryTableEntity
-        .create("myproject", "audit_dataset", "Lineage");
+    BigQueryTableEntity lineageTable =
+        BigQueryTableEntity.create("myproject", "audit_dataset", "Lineage");
     ZetaSqlSchemaLoaderFactory schemaLoaderFactory =
         BigQueryZetaSqlSchemaLoaderFactory.usingServiceFactory(
             FakeBigQueryServiceFactory.forTableSchemas(
                 TestResourceLoader.load("schemas/MyDataSet_PartnerInformation_schema.json"),
-                TestResourceLoader
-                    .load("schemas/MyDataSet_ExtractionPartnerInformation_schema.json")));
+                TestResourceLoader.load(
+                    "schemas/MyDataSet_ExtractionPartnerInformation_schema.json")));
 
     PCollection<CompositeLineage> lineage =
         p.apply(Create.of(TestResourceLoader.load("bq_query_with_pii_and_other_tags.json")))
@@ -72,6 +73,11 @@ public final class LineageExtractionTransformTest {
                         .setJobId("projects/bq-lineage-demo/jobs/bquxjob_4288f388_1726f873d79")
                         .setActuator("user@example.com")
                         .setJobTime(1591010148007L)
+                        .setTransform(
+                            TransformInformation.newBuilder()
+                                .setSql(
+                                    "SELECT\n  partner_id,\n  partner_name,\n  partner_phone_number\nFROM\n  `bq-lineage-demo.MyDataSet.PartnerInformation`")
+                                .build())
                         .build())
                 .setTableLineage(
                     TableLineage.newBuilder()
@@ -95,10 +101,7 @@ public final class LineageExtractionTransformTest {
                         .build())
                 .addColumnsLineage(
                     ColumnLineage.newBuilder()
-                        .setTarget(
-                            ColumnEntity.newBuilder()
-                                .setColumn("partner_id")
-                                .build())
+                        .setTarget(ColumnEntity.newBuilder().setColumn("partner_id").build())
                         .addParents(
                             ColumnEntity.newBuilder()
                                 .setTable(
@@ -114,10 +117,7 @@ public final class LineageExtractionTransformTest {
                         .build())
                 .addColumnsLineage(
                     ColumnLineage.newBuilder()
-                        .setTarget(
-                            ColumnEntity.newBuilder()
-                                .setColumn("partner_name")
-                                .build())
+                        .setTarget(ColumnEntity.newBuilder().setColumn("partner_name").build())
                         .addParents(
                             ColumnEntity.newBuilder()
                                 .setTable(
@@ -134,9 +134,7 @@ public final class LineageExtractionTransformTest {
                 .addColumnsLineage(
                     ColumnLineage.newBuilder()
                         .setTarget(
-                            ColumnEntity.newBuilder()
-                                .setColumn("partner_phone_number")
-                                .build())
+                            ColumnEntity.newBuilder().setColumn("partner_phone_number").build())
                         .addParents(
                             ColumnEntity.newBuilder()
                                 .setTable(
@@ -157,8 +155,8 @@ public final class LineageExtractionTransformTest {
 
   @Test
   public void identify_notInsertJob_noOpExtractor() {
-    BigQueryTableEntity lineageTable = BigQueryTableEntity
-        .create("myproject", "audit_dataset", "Lineage");
+    BigQueryTableEntity lineageTable =
+        BigQueryTableEntity.create("myproject", "audit_dataset", "Lineage");
 
     PCollection<CompositeLineage> compositeLineage =
         p.apply(Create.of(TestResourceLoader.load("get_query_results_message.json")))
@@ -172,44 +170,50 @@ public final class LineageExtractionTransformTest {
 
   @Test
   public void identify_insertJob_insertJobExtractor() {
-    BigQueryTableEntity lineageTable = BigQueryTableEntity
-        .create("myproject", "audit_dataset", "Lineage");
+    BigQueryTableEntity lineageTable =
+        BigQueryTableEntity.create("myproject", "audit_dataset", "Lineage");
     Clock fixedClock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
 
     PCollection<CompositeLineage> compositeLineage =
         p.apply(Create.of(TestResourceLoader.load("complete_bq_last_message.json")))
             .apply(
-                LineageExtractionTransform.builder().setClock(fixedClock)
-                    .setOutputLineageTable(lineageTable).build());
+                LineageExtractionTransform.builder()
+                    .setClock(fixedClock)
+                    .setOutputLineageTable(lineageTable)
+                    .build());
 
     PAssert.thatSingleton(compositeLineage)
-        .isEqualTo(CompositeLineage.newBuilder()
-            .setReconcileTime(fixedClock.instant().toEpochMilli())
-            .setJobInformation(JobInformation.newBuilder()
-                .setJobId("projects/myproject/jobs/bquxjob_4103dfda_17173ccc9a4")
-                .setJobTime(1586786228140L)
-                .setActuator("user@example.com")
-                .build())
-            .setTableLineage(
-                TableLineage.newBuilder()
-                    .setOperation("QUERY_JOB")
-                    .setTarget(
-                        BigQueryTableEntity
-                            .create("myproject", "demo", "sample_table").dataEntity())
-                    .addParents(
-                        BigQueryTableEntity
-                            .create("myproject", "demo", "events").dataEntity())
-                    .build()
-            )
-            .build());
+        .isEqualTo(
+            CompositeLineage.newBuilder()
+                .setReconcileTime(fixedClock.instant().toEpochMilli())
+                .setJobInformation(
+                    JobInformation.newBuilder()
+                        .setJobId("projects/myproject/jobs/bquxjob_4103dfda_17173ccc9a4")
+                        .setJobTime(1586786228140L)
+                        .setActuator("user@example.com")
+                        .setTransform(
+                            TransformInformation.newBuilder()
+                                .setSql("SELECT keyid FROM `myproject.demo.events` LIMIT 10")
+                                .build())
+                        .build())
+                .setTableLineage(
+                    TableLineage.newBuilder()
+                        .setOperation("QUERY_JOB")
+                        .setTarget(
+                            BigQueryTableEntity.create("myproject", "demo", "sample_table")
+                                .dataEntity())
+                        .addParents(
+                            BigQueryTableEntity.create("myproject", "demo", "events").dataEntity())
+                        .build())
+                .build());
 
     p.run();
   }
 
   @Test
   public void identify_jobError_noOpExtractor() {
-    BigQueryTableEntity lineageTable = BigQueryTableEntity
-        .create("myproject", "audit_dataset", "Lineage");
+    BigQueryTableEntity lineageTable =
+        BigQueryTableEntity.create("myproject", "audit_dataset", "Lineage");
 
     PCollection<CompositeLineage> compositeLineage =
         p.apply(Create.of(TestResourceLoader.load("bq_ddl_statement_job_error.json")))
@@ -223,8 +227,8 @@ public final class LineageExtractionTransformTest {
 
   @Test
   public void identify_readTableOperation_noOpExtractor() {
-    BigQueryTableEntity lineageTable = BigQueryTableEntity
-        .create("myproject", "audit_dataset", "Lineage");
+    BigQueryTableEntity lineageTable =
+        BigQueryTableEntity.create("myproject", "audit_dataset", "Lineage");
 
     PCollection<CompositeLineage> compositeLineage =
         p.apply(Create.of(TestResourceLoader.load("bq_insert_job_readTable_operation.json")))
@@ -238,12 +242,11 @@ public final class LineageExtractionTransformTest {
 
   @Test
   public void identify_nonLastMessage_noOpExtractor() {
-    BigQueryTableEntity lineageTable = BigQueryTableEntity
-        .create("myproject", "audit_dataset", "Lineage");
+    BigQueryTableEntity lineageTable =
+        BigQueryTableEntity.create("myproject", "audit_dataset", "Lineage");
 
     PCollection<CompositeLineage> compositeLineage =
-        p.apply(Create.of(
-            TestResourceLoader.load("complete_bq_first_message.json")))
+        p.apply(Create.of(TestResourceLoader.load("complete_bq_first_message.json")))
             .apply(
                 LineageExtractionTransform.builder().setOutputLineageTable(lineageTable).build());
 
@@ -254,12 +257,11 @@ public final class LineageExtractionTransformTest {
 
   @Test
   public void identify_noMetadata_noOpExtractor() {
-    BigQueryTableEntity lineageTable = BigQueryTableEntity
-        .create("myproject", "audit_dataset", "Lineage");
+    BigQueryTableEntity lineageTable =
+        BigQueryTableEntity.create("myproject", "audit_dataset", "Lineage");
 
     PCollection<CompositeLineage> compositeLineage =
-        p.apply(Create.of(
-            TestResourceLoader.load("bq_message_without_metadata.json")))
+        p.apply(Create.of(TestResourceLoader.load("bq_message_without_metadata.json")))
             .apply(
                 LineageExtractionTransform.builder().setOutputLineageTable(lineageTable).build());
 
@@ -270,12 +272,11 @@ public final class LineageExtractionTransformTest {
 
   @Test
   public void identify_tableDeleteJob_noOpExtractor() {
-    BigQueryTableEntity lineageTable = BigQueryTableEntity
-        .create("myproject", "audit_dataset", "Lineage");
+    BigQueryTableEntity lineageTable =
+        BigQueryTableEntity.create("myproject", "audit_dataset", "Lineage");
 
     PCollection<CompositeLineage> compositeLineage =
-        p.apply(Create.of(
-            TestResourceLoader.load("bq_delete_table_message.json")))
+        p.apply(Create.of(TestResourceLoader.load("bq_delete_table_message.json")))
             .apply(
                 LineageExtractionTransform.builder().setOutputLineageTable(lineageTable).build());
 
