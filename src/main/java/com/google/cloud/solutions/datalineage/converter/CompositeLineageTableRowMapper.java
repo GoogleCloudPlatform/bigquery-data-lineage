@@ -27,6 +27,7 @@ import com.google.cloud.solutions.datalineage.model.LineageMessages.DataEntity;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.DataEntity.DataEntityTypes;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.JobInformation;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.TableLineage;
+import com.google.cloud.solutions.datalineage.model.LineageMessages.TransformInformation;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import java.time.Instant;
@@ -94,8 +95,22 @@ public final class CompositeLineageTableRowMapper {
     if (isNotBlank(jobInformation.getJobType())) {
       jobInfoRow.set("jobType", jobInformation.getJobType());
     }
+    if (jobInformation.hasTransform()) {
+      jobInfoRow.set("transform", buildJobTransformInfo());
+    }
 
     return jobInfoRow;
+  }
+
+  private TableRow buildJobTransformInfo() {
+    TableRow transformInfo = new TableRow();
+    TransformInformation transformInformation = jobInformation.getTransform();
+
+    if (isNotBlank(transformInformation.getSql())) {
+      transformInfo.set("sql", transformInformation.getSql());
+    }
+
+    return transformInfo;
   }
 
   private TableRow buildTableLineage() {

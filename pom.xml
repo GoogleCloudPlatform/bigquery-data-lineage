@@ -28,6 +28,7 @@
     <beam.version>2.20.0</beam.version>
     <flogger.version>0.5.1</flogger.version>
     <guava.version>29.0-jre</guava.version>
+    <jsonassert.version>1.5.0</jsonassert.version>
     <junit.version>4.13</junit.version>
     <maven.compiler.release>8</maven.compiler.release>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -212,6 +213,13 @@
       <groupId>com.google.truth.extensions</groupId>
       <artifactId>truth-java8-extension</artifactId>
       <version>1.0.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.skyscreamer</groupId>
+      <artifactId>jsonassert</artifactId>
+      <version>${jsonassert.version}</version>
       <scope>test</scope>
     </dependency>
 

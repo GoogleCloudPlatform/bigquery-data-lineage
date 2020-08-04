@@ -25,7 +25,9 @@ import com.google.cloud.solutions.datalineage.model.DataEntityConvertible;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.ColumnLineage;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.CompositeLineage;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.DataEntity;
+import com.google.cloud.solutions.datalineage.model.LineageMessages.JobInformation;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.TableLineage;
+import com.google.cloud.solutions.datalineage.model.LineageMessages.TransformInformation;
 import com.google.cloud.solutions.datalineage.service.ZetaSqlSchemaLoaderFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -41,20 +43,22 @@ import java.util.concurrent.TimeUnit;
 public final class QueryJobExtractor extends LineageExtractor {
 
   private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
-  private static final String QUERY_REFERENCED_TABLES = "$.jobChange.job.jobStats.queryStats.referencedTables";
+  private static final String QUERY_REFERENCED_TABLES =
+      "$.jobChange.job.jobStats.queryStats.referencedTables";
   private static final String QUERY_SQL_PATH = "$.jobChange.job.jobConfig.queryConfig.query";
-  private static final String QUERY_DESTINATION_TABLE = "$.jobChange.job.jobConfig.queryConfig.destinationTable";
+  private static final String QUERY_DESTINATION_TABLE =
+      "$.jobChange.job.jobConfig.queryConfig.destinationTable";
 
   private final ZetaSqlSchemaLoaderFactory zetaSqlSchemaLoaderFactory;
 
-  public QueryJobExtractor(JsonMessageParser messageParser,
-      ZetaSqlSchemaLoaderFactory zetaSqlSchemaLoaderFactory) {
+  public QueryJobExtractor(
+      JsonMessageParser messageParser, ZetaSqlSchemaLoaderFactory zetaSqlSchemaLoaderFactory) {
     super(messageParser);
     this.zetaSqlSchemaLoaderFactory = zetaSqlSchemaLoaderFactory;
   }
 
-  public QueryJobExtractor(String messageJson,
-      ZetaSqlSchemaLoaderFactory zetaSqlSchemaLoaderFactory) {
+  public QueryJobExtractor(
+      String messageJson, ZetaSqlSchemaLoaderFactory zetaSqlSchemaLoaderFactory) {
     super(messageJson);
     this.zetaSqlSchemaLoaderFactory = zetaSqlSchemaLoaderFactory;
   }
@@ -66,12 +70,17 @@ public final class QueryJobExtractor extends LineageExtractor {
   @Override
   public CompositeLineage extract() {
     return CompositeLineage.newBuilder()
+        .setJobInformation(
+            JobInformation.newBuilder()
+                .setTransform(
+                    TransformInformation.newBuilder().setSql(extractQuerySql()).buildPartial())
+                .buildPartial())
         .setTableLineage(
             TableLineage.newBuilder()
                 .setOperation("QUERY_JOB")
                 .setTarget(
-                    DataEntityConvertible
-                        .convert(fromBigQueryResource(metadata().read(QUERY_DESTINATION_TABLE))))
+                    DataEntityConvertible.convert(
+                        fromBigQueryResource(metadata().read(QUERY_DESTINATION_TABLE))))
                 .addAllParents(extractReferencedTables())
                 .build())
         .addAllColumnsLineage(extractColumnLineage())
@@ -89,14 +98,10 @@ public final class QueryJobExtractor extends LineageExtractor {
         return ImmutableSet.of();
       }
 
-      return
-          new BigQuerySqlParser(zetaSqlSchemaLoaderFactory.newLoader())
-              .extractColumnLineage(sql);
+      return new BigQuerySqlParser(zetaSqlSchemaLoaderFactory.newLoader())
+          .extractColumnLineage(sql);
     } catch (SqlException sqlException) {
-      logger.atWarning()
-          .withCause(sqlException)
-          .atMostEvery(1, TimeUnit.MINUTES)
-          .log();
+      logger.atWarning().withCause(sqlException).atMostEvery(1, TimeUnit.MINUTES).log();
     }
     return ImmutableSet.of();
   }
@@ -104,7 +109,6 @@ public final class QueryJobExtractor extends LineageExtractor {
   private String extractQuerySql() {
     return metadata().readOrDefault(QUERY_SQL_PATH, "");
   }
-
 
   /**
    * Returns a list of BigQuery tables referenced by the query from the Query logs
@@ -114,12 +118,11 @@ public final class QueryJobExtractor extends LineageExtractor {
       return ImmutableSet.of();
     }
 
-    return
-        metadata()
-            .<List<String>>readOrDefault(QUERY_REFERENCED_TABLES, ImmutableList.of())
-            .stream()
-            .map(BigQueryTableCreator::fromBigQueryResource)
-            .map(DataEntityConvertible::convert)
-            .collect(toImmutableSet());
+    return metadata()
+        .<List<String>>readOrDefault(QUERY_REFERENCED_TABLES, ImmutableList.of())
+        .stream()
+        .map(BigQueryTableCreator::fromBigQueryResource)
+        .map(DataEntityConvertible::convert)
+        .collect(toImmutableSet());
   }
 }

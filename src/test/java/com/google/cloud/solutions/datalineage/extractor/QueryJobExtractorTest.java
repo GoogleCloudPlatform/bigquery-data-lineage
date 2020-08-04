@@ -21,7 +21,9 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.ColumnEntity;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.ColumnLineage;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.CompositeLineage;
+import com.google.cloud.solutions.datalineage.model.LineageMessages.JobInformation;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.TableLineage;
+import com.google.cloud.solutions.datalineage.model.LineageMessages.TransformInformation;
 import com.google.cloud.solutions.datalineage.service.BigQueryTableLoadService;
 import com.google.cloud.solutions.datalineage.service.BigQueryZetaSqlSchemaLoader;
 import com.google.cloud.solutions.datalineage.service.ZetaSqlSchemaLoaderFactory;
@@ -40,15 +42,24 @@ public final class QueryJobExtractorTest {
 
     assertThat(
         new QueryJobExtractor(
-            TestResourceLoader.load("bq_insert_job_with_create_ddl_operation_no_parent.json"))
+            TestResourceLoader.load(
+                "bq_insert_job_with_create_ddl_operation_no_parent.json"))
             .extract())
         .isEqualTo(
             CompositeLineage.newBuilder()
+                .setJobInformation(
+                    JobInformation.newBuilder()
+                        .setTransform(
+                            TransformInformation.newBuilder()
+                                .setSql(
+                                    "CREATE OR REPLACE TABLE `demo.test_partition`\nPARTITION BY DATE(`timestamp`) AS\nSELECT\n'6' as id,\nPARSE_TIMESTAMP('%F','2020-04-12') as `timestamp`\n")
+                                .build())
+                        .build())
                 .setTableLineage(
                     TableLineage.newBuilder()
                         .setTarget(
-                            BigQueryTableCreator
-                                .fromLegacyTableName("myproject:demo.test_partition")
+                            BigQueryTableCreator.fromLegacyTableName(
+                                "myproject:demo.test_partition")
                                 .dataEntity())
                         .setOperation("QUERY_JOB")
                         .build())
@@ -59,22 +70,29 @@ public final class QueryJobExtractorTest {
   public void extract_ddlCreateStatementOneParent_valid() {
 
     assertThat(
-        new QueryJobExtractor(
-            TestResourceLoader.load("bq_create_ddl_one_parent.json"))
+        new QueryJobExtractor(TestResourceLoader.load("bq_create_ddl_one_parent.json"))
             .extract())
         .isEqualTo(
             CompositeLineage.newBuilder()
+                .setJobInformation(
+                    JobInformation.newBuilder()
+                        .setTransform(
+                            TransformInformation.newBuilder()
+                                .setSql(
+                                    "CREATE OR REPLACE TABLE `myproject.demo.test_partition`\nAS\nSELECT\n timestamp,\n partner_id,\n advertiser_id\nFROM `myproject.demo.transactions`")
+                                .build())
+                        .build())
                 .setTableLineage(
-                    TableLineage
-                        .newBuilder()
+                    TableLineage.newBuilder()
                         .setTarget(
-                            BigQueryTableCreator
-                                .fromLegacyTableName("myproject:demo.test_partition")
+                            BigQueryTableCreator.fromLegacyTableName(
+                                "myproject:demo.test_partition")
                                 .dataEntity())
-                        .addAllParents(ImmutableSet.of(BigQueryTableCreator
-                            .fromBigQueryResource(
-                                "projects/myproject/datasets/demo/tables/transactions")
-                            .dataEntity()))
+                        .addAllParents(
+                            ImmutableSet.of(
+                                BigQueryTableCreator.fromBigQueryResource(
+                                    "projects/myproject/datasets/demo/tables/transactions")
+                                    .dataEntity()))
                         .setOperation("QUERY_JOB")
                         .build())
                 .build());
@@ -88,33 +106,49 @@ public final class QueryJobExtractorTest {
             .extract())
         .isEqualTo(
             CompositeLineage.newBuilder()
+                .setJobInformation(
+                    JobInformation.newBuilder()
+                        .setTransform(
+                            TransformInformation.newBuilder()
+                                .setSql("SELECT * FROM `myproject.demo.events` LIMIT 10")
+                                .build())
+                        .build())
                 .setTableLineage(
                     TableLineage.newBuilder()
-                        .setTarget(BigQueryTableCreator.fromBigQueryResource(
-                            "projects/myproject/datasets/demo/tables/sample_table")
-                            .dataEntity())
+                        .setTarget(
+                            BigQueryTableCreator.fromBigQueryResource(
+                                "projects/myproject/datasets/demo/tables/sample_table")
+                                .dataEntity())
                         .setOperation("QUERY_JOB")
-                        .build()
-                ).build());
+                        .build())
+                .build());
   }
 
   @Test
   public void extract_validQueryMessage_completedLineage() {
     assertThat(
-        new QueryJobExtractor(
-            TestResourceLoader.load("complete_bq_last_message.json"))
+        new QueryJobExtractor(TestResourceLoader.load("complete_bq_last_message.json"))
             .extract())
         .isEqualTo(
             CompositeLineage.newBuilder()
+                .setJobInformation(
+                    JobInformation.newBuilder()
+                        .setTransform(
+                            TransformInformation.newBuilder()
+                                .setSql("SELECT keyid FROM `myproject.demo.events` LIMIT 10")
+                                .build())
+                        .build())
                 .setTableLineage(
                     TableLineage.newBuilder()
-                        .setTarget(BigQueryTableCreator.fromBigQueryResource(
-                            "projects/myproject/datasets/demo/tables/sample_table")
-                            .dataEntity())
-                        .addAllParents(ImmutableSet.of(BigQueryTableCreator
-                            .fromBigQueryResource(
-                                "projects/myproject/datasets/demo/tables/events")
-                            .dataEntity()))
+                        .setTarget(
+                            BigQueryTableCreator.fromBigQueryResource(
+                                "projects/myproject/datasets/demo/tables/sample_table")
+                                .dataEntity())
+                        .addAllParents(
+                            ImmutableSet.of(
+                                BigQueryTableCreator.fromBigQueryResource(
+                                    "projects/myproject/datasets/demo/tables/events")
+                                    .dataEntity()))
                         .setOperation("QUERY_JOB")
                         .build())
                 .build());
@@ -122,40 +156,54 @@ public final class QueryJobExtractorTest {
 
   @Test
   public void extract_validQueryMessageAndCatalog_columnLineage() {
-    FakeBigQueryServiceFactory fakeBigqueryFactory = FakeBigQueryServiceFactory
-        .forTableSchemas(TestResourceLoader.load("schemas/bigquery_demo_events_schema.json"));
+    FakeBigQueryServiceFactory fakeBigqueryFactory =
+        FakeBigQueryServiceFactory.forTableSchemas(
+            TestResourceLoader.load("schemas/bigquery_demo_events_schema.json"));
     ZetaSqlSchemaLoaderFactory fakeLoaderFactory =
-        (ZetaSqlSchemaLoaderFactory) () ->
-            new BigQueryZetaSqlSchemaLoader(
-                BigQueryTableLoadService.usingServiceFactory(fakeBigqueryFactory));
+        (ZetaSqlSchemaLoaderFactory)
+            () ->
+                new BigQueryZetaSqlSchemaLoader(
+                    BigQueryTableLoadService.usingServiceFactory(fakeBigqueryFactory));
 
     assertThat(
         new QueryJobExtractor(
-            TestResourceLoader.load("complete_bq_last_message.json"),
-            fakeLoaderFactory)
+            TestResourceLoader.load("complete_bq_last_message.json"), fakeLoaderFactory)
             .extract())
         .isEqualTo(
             CompositeLineage.newBuilder()
+                .setJobInformation(
+                    JobInformation.newBuilder()
+                        .setTransform(
+                            TransformInformation.newBuilder()
+                                .setSql("SELECT keyid FROM `myproject.demo.events` LIMIT 10")
+                                .build())
+                        .build())
                 .setTableLineage(
                     TableLineage.newBuilder()
-                        .setTarget(BigQueryTableCreator.fromBigQueryResource(
-                            "projects/myproject/datasets/demo/tables/sample_table")
-                            .dataEntity())
-                        .addAllParents(ImmutableSet.of(BigQueryTableCreator
-                            .fromBigQueryResource(
-                                "projects/myproject/datasets/demo/tables/events")
-                            .dataEntity()))
+                        .setTarget(
+                            BigQueryTableCreator.fromBigQueryResource(
+                                "projects/myproject/datasets/demo/tables/sample_table")
+                                .dataEntity())
+                        .addAllParents(
+                            ImmutableSet.of(
+                                BigQueryTableCreator.fromBigQueryResource(
+                                    "projects/myproject/datasets/demo/tables/events")
+                                    .dataEntity()))
                         .setOperation("QUERY_JOB")
                         .build())
                 .addAllColumnsLineage(
                     ImmutableSet.of(
                         ColumnLineage.newBuilder()
                             .setTarget(ColumnEntity.newBuilder().setColumn("keyid").build())
-                            .addAllParents(ImmutableSet.of(
-                                ColumnEntity.newBuilder().setTable(
-                                    BigQueryTableCreator.usingBestEffort("myproject.demo.events")
-                                        .dataEntity())
-                                    .setColumn("keyid").build()))
+                            .addAllParents(
+                                ImmutableSet.of(
+                                    ColumnEntity.newBuilder()
+                                        .setTable(
+                                            BigQueryTableCreator.usingBestEffort(
+                                                "myproject.demo.events")
+                                                .dataEntity())
+                                        .setColumn("keyid")
+                                        .build()))
                             .build()))
                 .build());
   }

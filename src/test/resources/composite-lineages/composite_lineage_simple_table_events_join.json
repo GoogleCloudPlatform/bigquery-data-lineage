@@ -3,7 +3,10 @@
   "jobInformation": {
     "jobId": "projects/myproject/jobs/bquxjob_4103dfda_17173ccc9a4",
     "jobTime": "1586786228140",
-    "actuator": "user@example.com"
+    "actuator": "user@example.com",
+    "transform": {
+      "sql": "SELECT * FROM `myproject.demo.events` LIMIT 10"
+    }
   },
   "tableLineage": {
     "target": {
