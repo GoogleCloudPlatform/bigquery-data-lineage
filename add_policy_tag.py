@@ -32,8 +32,8 @@ schema_json_file.close()
 for column in table_schema:
   if column['name'] == column_name:
     if 'policyTags' not in column:
-      column['policyTags'] = []
-    column['policyTags'].append(additional_policy_tag)
+      column['policyTags'] = {'names' :[]}
+    column['policyTags']['names'].append(additional_policy_tag)
 
 # Print updated schema
 print (table_schema)
