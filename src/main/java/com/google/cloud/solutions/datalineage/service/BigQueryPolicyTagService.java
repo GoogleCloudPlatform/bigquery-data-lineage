@@ -22,6 +22,7 @@ import static java.util.function.Function.identity;
 
 import com.google.api.services.bigquery.model.Table;
 import com.google.api.services.bigquery.model.TableFieldSchema;
+import com.google.api.services.bigquery.model.TableFieldSchema.PolicyTags;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.cloud.solutions.datalineage.exception.BigQueryOperationException;
 import com.google.cloud.solutions.datalineage.extractor.BigQueryTableCreator;
@@ -37,16 +38,16 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableTable;
+import com.google.common.collect.Sets;
 import com.google.common.collect.Table.Cell;
 import com.google.common.flogger.GoogleLogger;
-import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -56,10 +57,6 @@ import java.util.concurrent.TimeUnit;
 public final class BigQueryPolicyTagService implements Serializable {
 
   private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
-  private static final String POLICY_TAG_FIELD_NAME = "policyTags";
-  private static final String POLICY_IDS_FIELD_NAME = "names";
-  private static final String POLICY_TAG_IDS_JSON_PATH = "$." + POLICY_IDS_FIELD_NAME + "[*]";
-
 
   private final BigQueryServiceFactory bqServiceFactory;
   private final BigQueryTableLoadService tableLoadService;
@@ -78,15 +75,11 @@ public final class BigQueryPolicyTagService implements Serializable {
     return readPolicies(tableEntity, ImmutableSet.of());
   }
 
-  private ImmutableList<ColumnPolicyTags> readPolicies
-      (BigQueryTableEntity tableEntity,
-          Collection<String> monitoredTags) {
+  private ImmutableList<ColumnPolicyTags> readPolicies(
+      BigQueryTableEntity tableEntity, Collection<String> monitoredTags) {
     PolicyExtractor policyExtractor = new PolicyExtractor(monitoredTags);
 
-    return tableLoadService.loadTable(tableEntity)
-        .getSchema()
-        .getFields()
-        .stream()
+    return tableLoadService.loadTable(tableEntity).getSchema().getFields().stream()
         .filter(policyExtractor::columnFilter)
         .map(policyExtractor::extractColumnPolicy)
         .collect(toImmutableList());
@@ -101,8 +94,7 @@ public final class BigQueryPolicyTagService implements Serializable {
 
     private final CompositeLineage lineage;
 
-    public PolicyUpdateFinder(
-        CompositeLineage lineage) {
+    public PolicyUpdateFinder(CompositeLineage lineage) {
       this.lineage = lineage;
     }
 
@@ -122,13 +114,12 @@ public final class BigQueryPolicyTagService implements Serializable {
     }
 
     private ImmutableTable<DataEntity, String, ColumnPolicyTags> readPolicyMap(
-        BigQueryTableEntity tableEntity,
-        Collection<String> monitoredPolicyIds) {
+        BigQueryTableEntity tableEntity, Collection<String> monitoredPolicyIds) {
 
       return readPolicies(tableEntity, monitoredPolicyIds).stream()
           .collect(
-              toImmutableTable(policyTags -> tableEntity.dataEntity(), ColumnPolicyTags::getColumn,
-                  identity()));
+              toImmutableTable(
+                  policyTags -> tableEntity.dataEntity(), ColumnPolicyTags::getColumn, identity()));
     }
 
     public Optional<TargetPolicyTags> forPolicies(Collection<String> monitoredPolicyIds) {
@@ -139,51 +130,48 @@ public final class BigQueryPolicyTagService implements Serializable {
       }
 
       ImmutableTable<DataEntity, String, ColumnPolicyTags> sourcePolicyTags =
-          readPolicyMap(lineage.getTableLineage().getParentsList(),
-              monitoredPolicyIds);
+          readPolicyMap(lineage.getTableLineage().getParentsList(), monitoredPolicyIds);
 
       HashMap<String, HashSet<String>> tagsForTargetTable = new HashMap<>();
 
       for (ColumnLineage columnLineage : lineage.getColumnsLineageList()) {
         for (ColumnEntity parent : columnLineage.getParentsList()) {
 
-          ColumnPolicyTags policyTags =
-              sourcePolicyTags.get(parent.getTable(), parent.getColumn());
+          ColumnPolicyTags policyTags = sourcePolicyTags.get(parent.getTable(), parent.getColumn());
 
           HashSet<String> targetPolicies =
               MoreObjects.firstNonNull(
-                  tagsForTargetTable.get(columnLineage.getTarget().getColumn()),
-                  new HashSet<>());
+                  tagsForTargetTable.get(columnLineage.getTarget().getColumn()), new HashSet<>());
 
           if (policyTags != null) {
             targetPolicies.addAll(policyTags.getPolicyTagIdsList());
           }
-          tagsForTargetTable
-              .put(columnLineage.getTarget().getColumn(), targetPolicies);
+          tagsForTargetTable.put(columnLineage.getTarget().getColumn(), targetPolicies);
         }
       }
 
       ImmutableList<ColumnPolicyTags> targetPolicyTags =
           tagsForTargetTable.entrySet().stream()
               .filter(entry -> entry.getValue() != null && !entry.getValue().isEmpty())
-              .map(entry ->
-                  ColumnPolicyTags.newBuilder()
-                      .setColumn(entry.getKey())
-                      .addAllPolicyTagIds(entry.getValue())
-                      .build())
+              .map(
+                  entry ->
+                      ColumnPolicyTags.newBuilder()
+                          .setColumn(entry.getKey())
+                          .addAllPolicyTagIds(entry.getValue())
+                          .build())
               .collect(toImmutableList());
 
       if (tagsForTargetTable.isEmpty()) {
-        logger.atInfo().every(100)
-            .log("Empty Target tags\nMonitoredTags:%s\ntarget:%s\nparents:\n%s",
-                monitoredPolicyIds,
-                lineage.getTableLineage().getTarget(),
-                lineage.getColumnsLineageList());
+        logger.atInfo().every(100).log(
+            "Empty Target tags\nMonitoredTags:%s\ntarget:%s\nparents:\n%s",
+            monitoredPolicyIds,
+            lineage.getTableLineage().getTarget(),
+            lineage.getColumnsLineageList());
       }
 
-      return targetPolicyTags.isEmpty() ?
-          Optional.empty() :
-          Optional.of(
+      return targetPolicyTags.isEmpty()
+          ? Optional.empty()
+          : Optional.of(
               TargetPolicyTags.newBuilder()
                   .setTable(lineage.getTableLineage().getTarget())
                   .addAllPolicyTags(targetPolicyTags)
@@ -200,7 +188,7 @@ public final class BigQueryPolicyTagService implements Serializable {
     }
 
     private boolean columnFilter(TableFieldSchema field) {
-      return field.get(POLICY_TAG_FIELD_NAME) != null;
+      return field.getPolicyTags() != null && !field.getPolicyTags().getNames().isEmpty();
     }
 
     private boolean policyFilter(String policyId) {
@@ -208,10 +196,10 @@ public final class BigQueryPolicyTagService implements Serializable {
     }
 
     public ColumnPolicyTags extractColumnPolicy(TableFieldSchema field) {
-
       ImmutableList<String> policyTagIds =
-          JsonPath.parse(field.get(POLICY_TAG_FIELD_NAME))
-              .<List<String>>read(POLICY_TAG_IDS_JSON_PATH)
+          Optional.ofNullable(field.getPolicyTags())
+              .map(PolicyTags::getNames)
+              .orElseGet(Collections::emptyList)
               .stream()
               .filter(this::policyFilter)
               .collect(toImmutableList());
@@ -237,20 +225,19 @@ public final class BigQueryPolicyTagService implements Serializable {
       this.table = tableLoadService.loadTable(tableEntity);
     }
 
-
     public UpdateColumnsPolicyProcessor withPolicies(List<ColumnPolicyTags> updatedPolicies) {
       ImmutableSet.Builder<String> updatableColumnsBuilder = ImmutableSet.builder();
-      ImmutableMap.Builder<String, List<String>> updatedTagsForColumnsBuilder = ImmutableMap
-          .builder();
+      ImmutableMap.Builder<String, List<String>> updatedTagsForColumnsBuilder =
+          ImmutableMap.builder();
 
       for (ColumnPolicyTags columnPolicyTags : updatedPolicies) {
         updatableColumnsBuilder.add(columnPolicyTags.getColumn());
-        updatedTagsForColumnsBuilder
-            .put(columnPolicyTags.getColumn(), columnPolicyTags.getPolicyTagIdsList());
+        updatedTagsForColumnsBuilder.put(
+            columnPolicyTags.getColumn(), columnPolicyTags.getPolicyTagIdsList());
       }
 
-      return new UpdateColumnsPolicyProcessor(updatableColumnsBuilder.build(),
-          updatedTagsForColumnsBuilder.build());
+      return new UpdateColumnsPolicyProcessor(
+          updatableColumnsBuilder.build(), updatedTagsForColumnsBuilder.build());
     }
 
     public class UpdateColumnsPolicyProcessor {
@@ -295,24 +282,20 @@ public final class BigQueryPolicyTagService implements Serializable {
         return field;
       }
 
-      @SuppressWarnings("unchecked")
       private TableFieldSchema updateColumnWithPolicy(TableFieldSchema field) {
-        HashMap<String, Object> policyTags = new HashMap<>();
-        HashSet<String> updatedPolicies = new HashSet<>(
-            updatedColumnPolicyMap.get(field.getName()));
+        PolicyTags fieldPolicyTags = field.getPolicyTags();
 
-        Optional.ofNullable(field.get(POLICY_TAG_FIELD_NAME))
-            .ifPresent(existingPolicyTags -> policyTags.putAll((Map) existingPolicyTags));
+        if (fieldPolicyTags == null) {
+          fieldPolicyTags = new PolicyTags().setNames(Collections.emptyList());
+          field.setPolicyTags(fieldPolicyTags);
+        }
 
-        Optional.ofNullable(policyTags.get(POLICY_IDS_FIELD_NAME))
-            .ifPresent(
-                existingPolicies -> updatedPolicies.addAll((Collection<String>) existingPolicies));
+        HashSet<String> completePolicies = Sets.newHashSet(fieldPolicyTags.getNames());
+        completePolicies.addAll(updatedColumnPolicyMap.get(field.getName()));
 
-        policyTags.put(POLICY_IDS_FIELD_NAME, updatedPolicies);
-        field.set(POLICY_TAG_FIELD_NAME, policyTags);
+        fieldPolicyTags.setNames(ImmutableList.copyOf(completePolicies));
         return field;
       }
-
     }
   }
 }

@@ -25,7 +25,8 @@
   <version>0.1-SNAPSHOT</version>
 
   <properties>
-    <beam.version>2.20.0</beam.version>
+    <beam.version>2.23.0</beam.version>
+    <cloud-libraries-bom.version>10.0.0</cloud-libraries-bom.version>
     <flogger.version>0.5.1</flogger.version>
     <guava.version>29.0-jre</guava.version>
     <jsonassert.version>1.5.0</jsonassert.version>
@@ -39,7 +40,7 @@
     <maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <protobuf.version>3.11.4</protobuf.version>
+    <protobuf.version>3.13.0</protobuf.version>
     <slf4j.version>1.7.25</slf4j.version>
     <sonar.projectKey>GoogleCloudPlatform_bigquery-data-lineage</sonar.projectKey>
     <sonar.organization>googlecloudplatform</sonar.organization>
@@ -47,6 +48,7 @@
     <sonar.version>3.6.1.1688</sonar.version>
     <spark.version>2.4.4</spark.version>
     <zetasql.version>2020.04.1</zetasql.version>
+    <protoc-jar-maven-plugin.version>3.11.4</protoc-jar-maven-plugin.version>
   </properties>
 
   <dependencies>
@@ -245,7 +247,7 @@
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>libraries-bom</artifactId>
-        <version>5.4.0</version>
+        <version>${cloud-libraries-bom.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -257,7 +259,7 @@
       <plugin>
         <groupId>com.github.os72</groupId>
         <artifactId>protoc-jar-maven-plugin</artifactId>
-        <version>${protobuf.version}</version>
+        <version>${protoc-jar-maven-plugin.version}</version>
         <executions>
           <execution>
             <phase>generate-sources</phase>
