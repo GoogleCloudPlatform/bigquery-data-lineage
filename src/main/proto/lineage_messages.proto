@@ -19,6 +19,7 @@ message JobInformation {
 message TransformInformation {
   string sql = 1;
   // Extendable information to capture software versions etc. add fields like Pipeline version etc.
+  map<string, string> transform_properties = 2;
 }
 
 message TableLineage {
