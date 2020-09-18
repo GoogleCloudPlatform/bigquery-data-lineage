@@ -28,7 +28,7 @@ The system uses Audit Logs emitted from BigQuery to identify operation's lineage
 [![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/bigquery-data-lineage.git)
 
 ### Setup environment variables
-1. Set project as `gcloud` default project, replace `<your-project-id>` with your project name.
+1. Set project as `gcloud` default project, replace `<your-project-id>` with your project id.
     ```shell script
     gcloud config set project <your-project-id>
     ```
