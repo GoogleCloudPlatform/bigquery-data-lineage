@@ -28,8 +28,12 @@ The system uses Audit Logs emitted from BigQuery to identify operation's lineage
 [![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/bigquery-data-lineage.git)
 
 ### Setup environment variables
-1. Set values for variables in `set_variables.sh` file.<br/>This allows you to set all option values in one place.
-2. Activate all environment variables.
+1. Set project as `gcloud` default project, replace `<your-project-id>` with your project name.
+    ```shell script
+    gcloud config set project <your-project-id>
+    ```
+2. Set values for variables in `set_variables.sh` file.<br/>This allows you to set all option values in one place.
+3. Activate all environment variables.
     ```shell script
     source set_variables.sh
     ```
