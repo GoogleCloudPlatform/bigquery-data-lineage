@@ -30,7 +30,7 @@
     <flogger.version>0.5.1</flogger.version>
     <guava.version>29.0-jre</guava.version>
     <jsonassert.version>1.5.0</jsonassert.version>
-    <junit.version>4.13</junit.version>
+    <junit.version>4.13.1</junit.version>
     <maven.compiler.release>8</maven.compiler.release>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
