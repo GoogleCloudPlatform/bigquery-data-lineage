@@ -16,6 +16,8 @@
 
 package com.google.cloud.solutions.datalineage.converter;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Provides services to read attributes of a structured Message.
  */
@@ -24,6 +26,7 @@ public interface MessageParser {
   /**
    * Returns a POJO read at the provided path or null if not found.
    */
+  @Nullable
   <T> T read(String path);
 
   /** Returns a POJO read at the provided path or the provided default value if target is empty. */

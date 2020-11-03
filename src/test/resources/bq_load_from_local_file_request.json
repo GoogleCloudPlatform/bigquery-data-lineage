@@ -1,0 +1,79 @@
+{
+  "protoPayload": {
+    "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+    "status": {},
+    "authenticationInfo": {
+      "principalEmail": "anantd@gcp.solutions"
+    },
+    "requestMetadata": {
+      "callerIp": "35.240.158.148",
+      "callerSuppliedUserAgent": "google-api-python-client/1.7.10 (gzip),gzip(gfe)",
+      "requestAttributes": {},
+      "destinationAttributes": {}
+    },
+    "serviceName": "bigquery.googleapis.com",
+    "methodName": "google.cloud.bigquery.v2.JobService.InsertJob",
+    "authorizationInfo": [
+      {
+        "resource": "projects/master-streamer-294504",
+        "permission": "bigquery.jobs.create",
+        "granted": true,
+        "resourceAttributes": {}
+      }
+    ],
+    "resourceName": "projects/master-streamer-294504/jobs/bqjob_r59dd7e512a820db_000001758dc15eff_1",
+    "metadata": {
+      "jobChange": {
+        "job": {
+          "jobConfig": {
+            "loadConfig": {
+              "destinationTable": "projects/master-streamer-294504/datasets/MyDataSet/tables/MockPiiTable",
+              "writeDisposition": "WRITE_APPEND",
+              "createDisposition": "CREATE_IF_NEEDED",
+              "schemaJson": "{\n}"
+            },
+            "type": "IMPORT"
+          },
+          "jobName": "projects/master-streamer-294504/jobs/bqjob_r59dd7e512a820db_000001758dc15eff_1",
+          "jobStats": {
+            "createTime": "2020-11-03T10:57:44.018Z",
+            "reservationUsage": [
+              {
+                "slotMs": "147",
+                "name": "default-pipeline"
+              }
+            ],
+            "startTime": "2020-11-03T10:57:44.434Z",
+            "totalSlotMs": "147",
+            "endTime": "2020-11-03T10:57:45.693Z",
+            "loadStats": {
+              "totalOutputBytes": "49979"
+            }
+          },
+          "jobStatus": {
+            "jobState": "DONE"
+          }
+        },
+        "after": "DONE"
+      },
+      "@type": "type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
+    }
+  },
+  "insertId": "-95ki76e1r5oq",
+  "resource": {
+    "type": "bigquery_project",
+    "labels": {
+      "location": "US",
+      "project_id": "master-streamer-294504"
+    }
+  },
+  "timestamp": "2020-11-03T10:57:45.837667Z",
+  "severity": "INFO",
+  "logName": "projects/master-streamer-294504/logs/cloudaudit.googleapis.com%2Fdata_access",
+  "operation": {
+    "id": "1604401064018-master-streamer-294504:bqjob_r59dd7e512a820db_000001758dc15eff_1",
+    "producer": "bigquery.googleapis.com",
+    "last": true
+  },
+  "receiveTimestamp": "2020-11-03T10:57:46.732416392Z"
+}

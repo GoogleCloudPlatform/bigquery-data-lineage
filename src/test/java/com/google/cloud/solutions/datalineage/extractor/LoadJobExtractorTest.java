@@ -16,7 +16,7 @@
 
 package com.google.cloud.solutions.datalineage.extractor;
 
-import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
 
 import com.google.cloud.solutions.datalineage.model.CloudStorageFile;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.CompositeLineage;
@@ -49,5 +49,22 @@ public final class LoadJobExtractorTest {
                         .setOperation("LOAD_JOB")
                         .build())
                 .build());
+  }
+
+  @Test
+  public void extract_loadLocalFile_empty() {
+    assertThat(
+      new LoadJobExtractor(TestResourceLoader.load("bq_load_from_local_file_request.json"))
+        .extract())
+      .isEqualTo(
+        CompositeLineage.newBuilder()
+          .setTableLineage(
+            TableLineage.newBuilder()
+              .setTarget(
+                BigQueryTableCreator.fromBigQueryResource(
+                  "projects/master-streamer-294504/datasets/MyDataSet/tables/MockPiiTable").dataEntity())
+                .setOperation("LOAD_JOB")
+                .build())
+            .build());
   }
 }

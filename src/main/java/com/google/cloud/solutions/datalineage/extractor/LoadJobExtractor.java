@@ -16,8 +16,6 @@
 
 package com.google.cloud.solutions.datalineage.extractor;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-
 import com.google.cloud.solutions.datalineage.model.CloudStorageFile;
 import com.google.cloud.solutions.datalineage.model.DataEntityConvertible;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.CompositeLineage;
@@ -26,13 +24,15 @@ import com.google.cloud.solutions.datalineage.model.LineageMessages.TableLineage
 import com.google.common.collect.ImmutableSet;
 import java.util.List;
 
-/**
- * Extracts complete lineage for a BigQuery Load Job.
- */
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+
+/** Extracts complete lineage for a BigQuery Load Job. */
 public final class LoadJobExtractor extends LineageExtractor {
 
-  private static final String LOAD_DESTINATION_TABLE = "$.jobChange.job.jobConfig.loadConfig.destinationTable";
-  private static final String LOAD_SOURCE_TABLES = "$.jobChange.job.jobConfig.loadConfig.sourceUris";
+  private static final String LOAD_DESTINATION_TABLE =
+      "$.jobChange.job.jobConfig.loadConfig.destinationTable";
+  private static final String LOAD_SOURCE_TABLES =
+      "$.jobChange.job.jobConfig.loadConfig.sourceUris";
 
   public LoadJobExtractor(JsonMessageParser messageParser) {
     super(messageParser);
@@ -49,8 +49,8 @@ public final class LoadJobExtractor extends LineageExtractor {
             TableLineage.newBuilder()
                 .setOperation("LOAD_JOB")
                 .setTarget(
-                    BigQueryTableCreator
-                        .fromBigQueryResource(metadata().read(LOAD_DESTINATION_TABLE))
+                    BigQueryTableCreator.fromBigQueryResource(
+                            metadata().read(LOAD_DESTINATION_TABLE))
                         .dataEntity())
                 .addAllParents(extractSources())
                 .build())
@@ -58,9 +58,16 @@ public final class LoadJobExtractor extends LineageExtractor {
   }
 
   private ImmutableSet<DataEntity> extractSources() {
-    return metadata().<List<String>>read(LOAD_SOURCE_TABLES).stream()
-        .map(CloudStorageFile::create).map(
-            DataEntityConvertible::dataEntity).collect(toImmutableSet());
+    List<String> sourceUris = metadata().read(LOAD_SOURCE_TABLES);
 
+    if (sourceUris != null) {
+      return
+        sourceUris.stream()
+          .map(CloudStorageFile::create)
+          .map(DataEntityConvertible::dataEntity)
+          .collect(toImmutableSet());
+    }
+
+    return ImmutableSet.of();
   }
 }
