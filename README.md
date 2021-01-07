@@ -136,3 +136,7 @@ gcloud pubsub topics create $LINEAGE_OUTPUT_PUBSUB_TOPIC --project $PROJECT_ID
     --compositeLineageTopic=projects/$PROJECT_ID/topics/$LINEAGE_OUTPUT_PUBSUB_TOPIC"
     ```
    
+## Discalimer
+**License**: Apache 2.0
+
+This is not an official Google product.
