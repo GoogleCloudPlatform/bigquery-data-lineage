@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START policy_permissions_info]
 title: "BigQuery Policy Tags Admin"
 description: "Allow users to read and update Column Policy Tags"
 stage: "BETA"
 includedPermissions:
   - bigquery.tables.setCategory
-
+# [END policy_permissions_info]
