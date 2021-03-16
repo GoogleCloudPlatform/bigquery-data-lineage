@@ -25,19 +25,19 @@
   <version>0.1-SNAPSHOT</version>
 
   <properties>
-    <beam.version>2.23.0</beam.version>
-    <cloud-libraries-bom.version>10.0.0</cloud-libraries-bom.version>
+    <beam.version>2.28.0</beam.version>
+    <cloud-libraries-bom.version>19.0.0</cloud-libraries-bom.version>
     <flogger.version>0.5.1</flogger.version>
-    <guava.version>29.0-jre</guava.version>
+    <guava.version>30.1-jre</guava.version>
     <jsonassert.version>1.5.0</jsonassert.version>
     <junit.version>4.13.1</junit.version>
     <maven.compiler.release>8</maven.compiler.release>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-exec-plugin.version>1.6.0</maven-exec-plugin.version>
-    <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
-    <maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
+    <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+    <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <protobuf.version>3.13.0</protobuf.version>
@@ -46,10 +46,10 @@
     <sonar.organization>googlecloudplatform</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.version>3.6.1.1688</sonar.version>
-    <spark.version>2.4.4</spark.version>
-    <zetasql.version>2020.10.1</zetasql.version>
+    <sonar.version>3.6.1.1688</sonar.version>
+    <zetasql.version>2021.02.1</zetasql.version>
     <protoc-jar-maven-plugin.version>3.11.4</protoc-jar-maven-plugin.version>
-    <truth.version>1.1</truth.version>
+    <truth.version>1.1.2</truth.version>
   </properties>
 
   <dependencies>
