@@ -261,7 +261,7 @@ public final class BigQueryTableCreatorTest {
                 /*table=*/ "Lineage_table"));
   }
 
-  // BigQuery Linked Resource format
+  // BigQuery Resource format
   @Test
   public void fromBqResource_projectIfWithNumber_valid() {
     assertThat(fromBigQueryResource(
@@ -390,6 +390,18 @@ public final class BigQueryTableCreatorTest {
 
     assertThat(illegalArgumentException).hasMessageThat().startsWith(
         "input (projects/test-project/datasets/audit_dataset/tables/lineage-table) not in correct format");
+  }
+
+  @Test
+  public void fromBqResource_tableWithPartitionDecorator_valid() {
+    assertThat(
+        fromBigQueryResource(
+            "projects/example.co.in:test-project/datasets/audit_dataset/tables/lineage_table$20210606"))
+        .isEqualTo(
+            BigQueryTableEntity.create(
+                /*projectId=*/ "example.co.in:test-project",
+                /*dataset=*/ "audit_dataset",
+                /*table=*/ "lineage_table"));
   }
 
   // BigQuery Linked Resource format
