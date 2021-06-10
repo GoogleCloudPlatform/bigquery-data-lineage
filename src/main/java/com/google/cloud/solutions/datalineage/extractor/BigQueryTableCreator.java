@@ -99,7 +99,7 @@ public abstract class BigQueryTableCreator {
 
   private static final String BQ_RESOURCE_FORMAT =
       String.format(
-          "^projects/(?<%s>%s)/datasets/(?<%s>%s)/tables/(?<%s>%s)$",
+          "^projects/(?<%s>%s)/datasets/(?<%s>%s)/tables/(?<%s>%s)(\\$[0-9]+)?$",
           PROJECT_ID_TAG, PROJECT_PATTERN, DATASET_ID_TAG, DATASET_PATTERN, TABLE_ID_TAG,
           TABLE_PATTERN);
 
