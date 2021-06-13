@@ -16,16 +16,12 @@
 
 package com.google.cloud.solutions.datalineage.model;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.solutions.datalineage.model.LineageMessages.ColumnEntity;
-import com.google.cloud.solutions.datalineage.model.LineageMessages.DataEntity.DataEntityTypes;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import org.apache.beam.sdk.schemas.AutoValueSchema;
 import org.apache.beam.sdk.schemas.annotations.DefaultSchema;
 import org.apache.beam.sdk.schemas.annotations.SchemaCreate;
@@ -39,15 +35,6 @@ import org.apache.beam.sdk.schemas.annotations.SchemaCreate;
 public abstract class QueryColumns {
 
   public abstract ImmutableMap<String, ColumnEntity> getColumnMap();
-
-  public final ImmutableSet<String> getProcessedColumnTypes() {
-    return getColumnMap().values().stream()
-        .filter(columnEntity -> columnEntity.getTable().getKind()
-            .equals(DataEntityTypes.QUERY_LEVEL_TABLE))
-        .map(columnEntity -> columnEntity.getTable().getSqlResource())
-        .filter(tableName -> tableName.startsWith("$"))
-        .collect(toImmutableSet());
-  }
 
   @SchemaCreate
   public static QueryColumns create(ImmutableMap<String, ColumnEntity> columnMap) {

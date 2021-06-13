@@ -31,11 +31,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+
 @RunWith(JUnit4.class)
 public final class BigQuerySqlParserTest {
 
   @Test
-  public void extractColumnLineage_concatColumns_correctColumnNames() {
+  public void queryExtractColumnLineage_concatColumns_correctColumnNames() {
     FakeBigQueryServiceFactory fakeBigqueryFactory =
         FakeBigQueryServiceFactory
             .forTableSchemas(
@@ -72,7 +73,7 @@ public final class BigQuerySqlParserTest {
   }
 
   @Test
-  public void extractColumnLineage_multipleOutputColumnsWithAlias_correctColumnLineage() {
+  public void queryExtractColumnLineage_multipleOutputColumnsWithAlias_correctColumnLineage() {
     FakeBigQueryServiceFactory fakeBigqueryFactory =
         FakeBigQueryServiceFactory.forTableSchemas(
             TestResourceLoader.load("schemas/tableA_schema.json"),
@@ -116,7 +117,7 @@ public final class BigQuerySqlParserTest {
   }
 
   @Test
-  public void extractColumnLineage_multipleOutputColumnsWithoutAlias_correctColumnLineage() {
+  public void queryExtractColumnLineage_multipleOutputColumnsWithoutAlias_correctColumnLineage() {
     FakeBigQueryServiceFactory fakeBigqueryFactory =
         FakeBigQueryServiceFactory.forTableSchemas(
             TestResourceLoader.load("schemas/tableA_schema.json"),
@@ -169,7 +170,7 @@ public final class BigQuerySqlParserTest {
 
   @Test
   public void
-  extractColumnLineage_bigQuerySchemaMultipleOutputColumnsWithoutAlias_correctColumnLineage() {
+  queryExtractColumnLineage_bigQuerySchemaMultipleOutputColumnsWithoutAlias_correctColumnLineage() {
     FakeBigQueryServiceFactory fakeBigqueryFactory =
         FakeBigQueryServiceFactory.forTableSchemas(
             TestResourceLoader.load("schemas/daily_report_table_schema.json"),
@@ -276,6 +277,88 @@ public final class BigQuerySqlParserTest {
                                 .usingBestEffort("bigquery-public-data.ncaa_basketball.team_colors")
                                 .dataEntity())
                             .setColumn("color").build()))
+                .build());
+  }
+
+  @Test
+  public void insertExtractColumnLineage_tableA_specifyColumns_correctColumnLineage() {
+    FakeBigQueryServiceFactory fakeBigQueryFactory =
+        FakeBigQueryServiceFactory.forTableSchemas(
+            TestResourceLoader.load("schemas/tableA_schema.json"),
+            TestResourceLoader.load("schemas/tableB_schema.json"));
+    BigQueryZetaSqlSchemaLoader fakeSchemaLoader =
+        new BigQueryZetaSqlSchemaLoader(
+            BigQueryTableLoadService.usingServiceFactory(fakeBigQueryFactory));
+
+    ImmutableSet<ColumnLineage> resolvedStatement =
+        new BigQuerySqlParser(fakeSchemaLoader)
+            .extractColumnLineage(
+                TestResourceLoader
+                    .load(
+                        "sql/tableA_specify_columns_insert.sql"));
+
+    assertThat(resolvedStatement)
+        .containsExactly(
+            ColumnLineage.newBuilder()
+                .setTarget(ColumnEntity.newBuilder().setColumn("colA").build())
+                .addAllParents(
+                    ImmutableSet.of(
+                        ColumnEntity.newBuilder().setTable(
+                            BigQueryTableCreator
+                                .usingBestEffort("project2.datasetB.TableB")
+                                .dataEntity())
+                            .setColumn("colB").build()))
+                .build(),
+            ColumnLineage.newBuilder()
+                .setTarget(ColumnEntity.newBuilder().setColumn("colC").build())
+                .addAllParents(
+                    ImmutableSet.of(
+                        ColumnEntity.newBuilder().setTable(
+                            BigQueryTableCreator
+                                .usingBestEffort("project2.datasetB.TableB")
+                                .dataEntity())
+                            .setColumn("colC").build()))
+                .build());
+  }
+
+  @Test
+  public void insertExtractColumnLineage_tableA_inferColumns_correctColumnLineage() {
+    FakeBigQueryServiceFactory fakeBigQueryFactory =
+        FakeBigQueryServiceFactory.forTableSchemas(
+            TestResourceLoader.load("schemas/tableA_schema.json"),
+            TestResourceLoader.load("schemas/tableB_schema.json"));
+    BigQueryZetaSqlSchemaLoader fakeSchemaLoader =
+        new BigQueryZetaSqlSchemaLoader(
+            BigQueryTableLoadService.usingServiceFactory(fakeBigQueryFactory));
+
+    ImmutableSet<ColumnLineage> resolvedStatement =
+        new BigQuerySqlParser(fakeSchemaLoader)
+            .extractColumnLineage(
+                TestResourceLoader
+                    .load(
+                        "sql/tableA_infer_columns_insert.sql"));
+
+    assertThat(resolvedStatement)
+        .containsExactly(
+            ColumnLineage.newBuilder()
+                .setTarget(ColumnEntity.newBuilder().setColumn("colA").build())
+                .addAllParents(
+                    ImmutableSet.of(
+                        ColumnEntity.newBuilder().setTable(
+                            BigQueryTableCreator
+                                .usingBestEffort("project2.datasetB.TableB")
+                                .dataEntity())
+                            .setColumn("colB").build()))
+                .build(),
+            ColumnLineage.newBuilder()
+                .setTarget(ColumnEntity.newBuilder().setColumn("colC").build())
+                .addAllParents(
+                    ImmutableSet.of(
+                        ColumnEntity.newBuilder().setTable(
+                            BigQueryTableCreator
+                                .usingBestEffort("project2.datasetB.TableB")
+                                .dataEntity())
+                            .setColumn("colC").build()))
                 .build());
   }
 }

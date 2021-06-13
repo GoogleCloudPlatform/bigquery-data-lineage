@@ -21,7 +21,6 @@ import static com.google.cloud.solutions.datalineage.converter.ResolvedColumnToC
 import com.google.cloud.solutions.datalineage.model.LineageMessages.ColumnEntity;
 import com.google.cloud.solutions.datalineage.model.QueryColumns;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.zetasql.resolvedast.ResolvedColumn;
 import com.google.zetasql.resolvedast.ResolvedNodes;
 import com.google.zetasql.resolvedast.ResolvedNodes.ResolvedStatement;
@@ -42,7 +41,6 @@ public final class OutputColumnExtractor {
    */
   public QueryColumns extract() {
     ImmutableMap.Builder<String, ColumnEntity> outputColumnBuilder = ImmutableMap.builder();
-    ImmutableSet.Builder<String> nonTableColumnTypes = ImmutableSet.builder();
 
     resolvedStatement.accept(
         new ResolvedNodes.Visitor() {
@@ -53,11 +51,15 @@ public final class OutputColumnExtractor {
                 outputColumn.getName(),
                 convertToColumnEntity(resolvedColumn));
 
-            if (resolvedColumn.getTableName().startsWith("$")) {
-              nonTableColumnTypes.add(resolvedColumn.getTableName());
-            }
-
             super.visit(outputColumn);
+          }
+
+          @Override
+          public void visit(ResolvedNodes.ResolvedInsertStmt insertStmt) {
+            insertStmt.getInsertColumnList().forEach(resolvedColumn ->
+              outputColumnBuilder.put(resolvedColumn.getName(),
+                  convertToColumnEntity(resolvedColumn)));
+            super.visit(insertStmt);
           }
         });
 
