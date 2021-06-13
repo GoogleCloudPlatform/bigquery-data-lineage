@@ -17,7 +17,6 @@
 package com.google.cloud.solutions.datalineage;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.zetasql.Analyzer.extractTableNamesFromStatement;
 
 import com.google.cloud.solutions.datalineage.extractor.ColumnLineageExtractor;
 import com.google.cloud.solutions.datalineage.extractor.ColumnLineageExtractorFactory;
@@ -110,7 +109,7 @@ public class BigQuerySqlParser {
   }
 
   private static ImmutableSet<String> extractReferencedTables(String sql) {
-    return extractTableNamesFromStatement(sql).stream()
+    return Analyzer.extractTableNamesFromStatement(sql, enableAllFeatures()).stream()
         .flatMap(List::stream)
         .collect(toImmutableSet());
   }
@@ -119,9 +118,11 @@ public class BigQuerySqlParser {
     return Analyzer.analyzeStatement(sql, enableAllFeatures(), buildCatalogWithQueryTables(sql));
   }
 
-  private AnalyzerOptions enableAllFeatures() {
+  private static AnalyzerOptions enableAllFeatures() {
+    LanguageOptions languageOptions = new LanguageOptions().enableMaximumLanguageFeatures();
+    languageOptions.setSupportsAllStatementKinds();
     AnalyzerOptions analyzerOptions = new AnalyzerOptions();
-    analyzerOptions.setLanguageOptions(new LanguageOptions().enableMaximumLanguageFeatures());
+    analyzerOptions.setLanguageOptions(languageOptions);
     analyzerOptions.setPruneUnusedColumns(true);
 
     return analyzerOptions;

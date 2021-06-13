@@ -57,8 +57,49 @@ public final class OutputColumnExtractor {
               nonTableColumnTypes.add(resolvedColumn.getTableName());
             }
 
-            super.visit(outputColumn);
           }
+
+          @Override
+          public void visit(ResolvedNodes.ResolvedMergeStmt mergeStmt) {
+            mergeStmt.getFromScan().getColumnList().forEach(resolvedColumn -> {
+              outputColumnBuilder.put(resolvedColumn.getName(),
+                  convertToColumnEntity(resolvedColumn));
+              if (resolvedColumn.getTableName().startsWith("$")) {
+                nonTableColumnTypes.add(resolvedColumn.getTableName());
+              }
+            });
+            super.visit(mergeStmt);
+          }
+
+          /*
+          //TODO skuehn enable after testing
+
+          @Override
+          public void visit(ResolvedNodes.ResolvedInsertStmt insertStmt) {
+            insertStmt.getQueryOutputColumnList().forEach(resolvedColumn -> {
+              outputColumnBuilder.put(resolvedColumn.getName(),
+                  convertToColumnEntity(resolvedColumn));
+              if (resolvedColumn.getTableName().startsWith("$")) {
+                nonTableColumnTypes.add(resolvedColumn.getTableName());
+              }
+            });
+            super.visit(insertStmt);
+          }
+
+          @Override
+          public void visit(ResolvedNodes.ResolvedUpdateStmt updateStmt) {
+            //TODO skuehn verify these resolvedoutputcolumns aren't passed through output column visitor again
+            updateStmt.getReturning().getOutputColumnList().forEach(resolvedOutputColumn -> {
+              outputColumnBuilder.put(resolvedOutputColumn.getName(),
+                  convertToColumnEntity(resolvedOutputColumn.getColumn()));
+              if (resolvedOutputColumn.getColumn().getTableName().startsWith("$")) {
+                nonTableColumnTypes.add(resolvedOutputColumn.getColumn().getTableName());
+              }
+            });
+            super.visit(updateStmt);
+          }
+
+           */
         });
 
     return QueryColumns.builder()
