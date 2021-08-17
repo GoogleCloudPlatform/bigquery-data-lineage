@@ -61,9 +61,14 @@ public abstract class AuditLogValidator implements SerializableFunction<String, 
     }
 
     private boolean validDestinationTable() {
+      
+      List<String> destinationTableList = parser.forSubNode(METADATA_ROOT).<List<String>>read(QUERY_DESTINATION_TABLE);
+      if(destinationTableList.size() <= 0) {
+        return false;
+      }
+      
       BigQueryTableEntity destinationTable =
-          fromBigQueryResource(
-              parser.forSubNode(METADATA_ROOT).<List<String>>read(QUERY_DESTINATION_TABLE).get(0));
+          fromBigQueryResource(destinationTableList.get(0));
 
       return !(destinationTable.isTempTable() || getOutputLineageTable().equals(destinationTable));
     }
