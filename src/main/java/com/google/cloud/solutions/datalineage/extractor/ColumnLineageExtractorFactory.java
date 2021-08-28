@@ -27,7 +27,6 @@ import com.google.zetasql.AnalyzerOptions;
 import com.google.zetasql.SimpleCatalog;
 import com.google.zetasql.resolvedast.ResolvedNodes.ResolvedStatement;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -91,22 +90,10 @@ public final class ColumnLineageExtractorFactory {
   }
 
   /**
-   * Returns a set of applicable Extractors for the provided SQL query.
+   * Returns a set of applicable Extractors
    */
   public ImmutableSet<ColumnLineageExtractor> buildExtractors() {
-    return outputColumns()
-        .getProcessedColumnTypes().stream()
-        .map(this::buildExtractorFor)
-        .flatMap(Collection::stream)
-        .distinct()
-        .collect(toImmutableSet());
-  }
-
-  /**
-   * Returns a set of extractors for given columnType or empty set, if not find.
-   */
-  public ImmutableSet<ColumnLineageExtractor> buildExtractorFor(String columnType) {
-    return extractorTypeMap.get(columnType).stream()
+    return extractorTypeMap.values().stream()
         .map(clazz -> buildExtractor(clazz, resolvedStatement))
         .filter(Optional::isPresent)
         .map(Optional::get)
