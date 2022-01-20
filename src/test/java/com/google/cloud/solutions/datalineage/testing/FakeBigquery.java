@@ -19,7 +19,7 @@ package com.google.cloud.solutions.datalineage.testing;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.function.Function.identity;
 
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.services.bigquery.Bigquery;
 import com.google.api.services.bigquery.model.Table;
@@ -55,7 +55,7 @@ public class FakeBigquery extends Bigquery {
   }
 
   public FakeBigquery(Map<String, Table> predefinedTables) {
-    super(new MockHttpTransport(), new JacksonFactory(), null);
+    super(new MockHttpTransport(), new GsonFactory(), null);
     this.predefinedTables = new HashMap<>(predefinedTables);
     this.numTimesCounterTables = new AtomicInteger(0);
     this.numTimesCounterTablesGetExecute = new AtomicInteger(0);
