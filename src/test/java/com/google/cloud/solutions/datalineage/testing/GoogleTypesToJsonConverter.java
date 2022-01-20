@@ -20,7 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -31,7 +31,7 @@ import java.util.Objects;
 public final class GoogleTypesToJsonConverter {
 
   public static <T> T convertFromJson(Class<T> clazz, String typeJson) {
-    try (JsonParser parser = new JacksonFactory().createJsonParser(typeJson)) {
+    try (JsonParser parser = new GsonFactory().createJsonParser(typeJson)) {
       return parser.parse(clazz);
     } catch (IOException jsonProcessingException) {
       return null;
@@ -56,7 +56,7 @@ public final class GoogleTypesToJsonConverter {
     }
 
     StringWriter stringWriter = new StringWriter();
-    try (JsonGenerator jsonGenerator = new JacksonFactory().createJsonGenerator(stringWriter)) {
+    try (JsonGenerator jsonGenerator = new GsonFactory().createJsonGenerator(stringWriter)) {
       // Output is primarily used for testing and hence enable pretty printing.
       jsonGenerator.enablePrettyPrint();
       jsonGenerator.serialize(item);

@@ -16,13 +16,16 @@
 
 package com.google.cloud.solutions.datalineage.testing;
 
+import com.google.api.gax.retrying.RetrySettings;
 import com.google.api.gax.rpc.ApiCallContext;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.api.gax.rpc.TransportChannel;
 import com.google.api.gax.tracing.ApiTracer;
 import com.google.auth.Credentials;
 import com.google.auto.value.AutoValue;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.threeten.bp.Duration;
@@ -32,6 +35,10 @@ public abstract class FakeApiCallContext implements ApiCallContext {
 
   @Nullable
   public abstract Credentials getCredentials();
+
+  @Nullable
+  @Override
+  public final <T> T getOption(Key<T> key) { return null; }
 
   @Override
   public ApiCallContext withCredentials(Credentials credentials) {
@@ -81,6 +88,21 @@ public abstract class FakeApiCallContext implements ApiCallContext {
     return this.toBuilder().setExtraHeaders(map).build();
   }
 
+  @Override
+  public ApiCallContext withRetrySettings(RetrySettings retrySettings) {
+    return toBuilder().setRetrySettings(retrySettings).build();
+  }
+
+  @Override
+  public ApiCallContext withRetryableCodes(Set<Code> retryableCodes) {
+    return toBuilder().setRetryableCodes(retryableCodes).build();
+  }
+
+  @Override
+  public final <T> ApiCallContext withOption(Key<T> key, T value) {
+    return this;
+  }
+
   public static Builder builder() {
     return new AutoValue_FakeApiCallContext.Builder();
   }
@@ -104,6 +126,10 @@ public abstract class FakeApiCallContext implements ApiCallContext {
     public abstract Builder setStreamIdleTimeout(@Nullable Duration newStreamIdleTimeout);
 
     public abstract Builder setExtraHeaders(@Nullable Map<String, List<String>> newExtraHeaders);
+
+    public abstract Builder setRetrySettings(RetrySettings retrySettings);
+
+    public abstract Builder setRetryableCodes(Set<Code> codes);
 
     public abstract FakeApiCallContext build();
   }

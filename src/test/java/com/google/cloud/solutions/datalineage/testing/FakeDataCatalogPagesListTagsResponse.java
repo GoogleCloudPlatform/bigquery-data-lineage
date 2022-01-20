@@ -80,6 +80,11 @@ public class FakeDataCatalogPagesListTagsResponse extends FakeApiFutureBase<List
         }
 
         @Override
+        public void attemptStarted(Object o, int i) {
+          // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
+        }
+
+        @Override
         public void attemptSucceeded() {
           // Do nothing because this is a Fake and doesn't implement an actual gRPC operation.
         }
