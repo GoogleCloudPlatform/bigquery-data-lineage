@@ -329,28 +329,41 @@ You can now run the policy propagation.
         export TEMP_GCS_BUCKET="TEMP_GCS_BUCKET_NAME"
         gsutil mb -p $PROJECT_ID -l $REGION_ID gs://$TEMP_GCS_BUCKET
 
-1.  Identify the exported lineage PubSub topic and replace
-    `LINEAGE_EXPORT_TOPIC` with the data lineage export
-    topic ID:
+1.  Identify the exported lineage PubSub topic and replace `LINEAGE_EXPORT_TOPIC` with the data lineage export topic ID:
 
         export LINEAGE_OUTPUT_PUBSUB_TOPIC="LINEAGE_EXPORT_TOPIC"
 
+1.  Build the pipeline using Cloud Build
+
+    ```shell
+    gcloud builds submit \
+    --substitutions _JAR_GCS_LOCATION="${TEMP_GCS_BUCKET}/jars" \
+    --project "${PROJECT_ID}"
+    ```
+
+1.  Download the JAR file:
+
+    ```shell
+    gsutil cp "gs://${TEMP_GCS_BUCKET}/jars/bigquery-data-lineage-bundled-0.1-SNAPSHOT.jar" .
+    ```
+    
 1.  Launch the Dataflow pipeline:
 
-        mvn clean compile package exec:java \
-          -Dexec.mainClass=com.google.cloud.solutions.datalineage.PolicyPropagationPipeline \
-            -Dexec.cleanupDaemonThreads=false \
-            -Dmaven.test.skip=true \
-            -Dexec.args=" \
-        --streaming=true \
-        --project=$PROJECT_ID \
-        --runner=DataflowRunner \
-        --gcpTempLocation=gs://$TEMP_GCS_BUCKET/temp/ \
-        --stagingLocation=gs://$TEMP_GCS_BUCKET/staging/ \
-        --workerMachineType=n1-standard-1 \
-        --region=$REGION_ID \
-        --lineagePubSubTopic=projects/$LINEAGE_PROJECT_ID/topics/$LINEAGE_OUTPUT_PUBSUB_TOPIC \
-        --monitoredPolicyTags=$MONITORED_POLICY_TAG_ID"
+    ```shell
+    CASCADE_MAIN_CLASS="com.google.cloud.solutions.datalineage.PolicyPropagationPipeline"
+    
+    java -cp bigquery-data-lineage-bundled-0.1-SNAPSHOT.jar \
+     "${CASCADE_MAIN_CLASS}" \
+    --streaming=true \
+    --project"=${PROJECT_ID}" \
+    --runner=DataflowRunner \
+    --gcpTempLocation="gs://${TEMP_GCS_BUCKET}/temp/" \
+    --stagingLocation="gs://${TEMP_GCS_BUCKET}/staging/" \
+    --workerMachineType=n1-standard-1 \
+    --region="${REGION_ID}" \
+    --lineagePubSubTopic="projects/${LINEAGE_PROJECT_ID}/topics/${LINEAGE_OUTPUT_PUBSUB_TOPIC}" \
+    --monitoredPolicyTags="${MONITORED_POLICY_TAG_ID}"
+    ```
 
     The command initializes a Dataflow streaming pipeline
     that reads the lineage data exported to the provided PubSub
