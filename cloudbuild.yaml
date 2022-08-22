@@ -1,0 +1,13 @@
+steps:
+  - name: maven:3-openjdk-11
+    entrypoint: mvn
+    args:
+      - clean
+      - generate-sources
+      - compile
+      - package
+artifacts:
+  objects:
+    location: 'gs://${_JAR_GCS_LOCATION}'
+    paths:
+      - target/bigquery-data-lineage-bundled-0.1-SNAPSHOT.jar

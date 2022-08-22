@@ -31,9 +31,6 @@
     <guava.version>31.0.1-jre</guava.version>
     <jsonassert.version>1.5.0</jsonassert.version>
     <junit.version>4.13.2</junit.version>
-    <maven.compiler.release>8</maven.compiler.release>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-exec-plugin.version>1.6.0</maven-exec-plugin.version>
     <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
@@ -291,9 +288,9 @@
         <configuration>
           <parameters>true</parameters>
           <testCompilerArgument>-parameters</testCompilerArgument>
-          <release>${maven.compiler.release}</release>
-          <source>${maven.compiler.source}</source>
-          <target>${maven.compiler.target}</target>
+          <release>11</release>
+          <source>11</source>
+          <target>11</target>
         </configuration>
       </plugin>
 
