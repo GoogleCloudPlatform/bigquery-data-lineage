@@ -104,26 +104,35 @@ gcloud pubsub topics create $LINEAGE_OUTPUT_PUBSUB_TOPIC --project $PROJECT_ID
     ```shell script
     gsutil mb -l $REGION_ID -p $PROJECT_ID gs://$TEMP_GCS_BUCKET
     ```
-2. Launch Dataflow pipeline
-    ```shell script
-    sh launch_extraction.sh
+2. Build the pipeline using Cloud Build
+    ```shell
+    gcloud builds submit \
+    --substitutions _JAR_GCS_LOCATION="${TEMP_GCS_BUCKET}/jars" \
+    --project "${PROJECT_ID}"
     ```
-   OR
-    ```shell script
-    mvn clean generate-sources compile package exec:java \
-      -Dexec.mainClass=$EXTRACTION_MAIN_CLASS \
-      -Dexec.cleanupDaemonThreads=false \
-      -Dmaven.test.skip=true \
-      -Dexec.args=" \
+
+3. Download the JAR file:
+
+    ```shell
+    gsutil cp "gs://${TEMP_GCS_BUCKET}/jars/bigquery-data-lineage-bundled-0.1-SNAPSHOT.jar" .
+    ```
+
+4. Launch the pipeline:
+
+    ```shell
+    EXTRACTION_MAIN_CLASS=""
+      export MAIN_CLASS="com.google.cloud.solutions.datalineage.LineageExtractionPipeline"
+      
+    java -cp bigquery-data-lineage-bundled-0.1-SNAPSHOT.jar "${MAIN_CLASS}" \
     --streaming=true \
-    --project=$PROJECT_ID \
+    --project="${PROJECT_ID}" \
     --runner=DataflowRunner \
-    --gcpTempLocation=gs://$TEMP_GCS_BUCKET/temp/ \
-    --stagingLocation=gs://$TEMP_GCS_BUCKET/staging/ \
-    --workerMachineType=n1-standard-1 \
-    --region=$REGION_ID \
-    --lineageTableName=$PROJECT_ID:$DATASET_ID.$LINEAGE_TABLE_ID \
-    --tagTemplateId=$LINEAGE_TAG_TEMPLATE_ID \
-    --pubsubTopic=projects/$PROJECT_ID/topics/$AUDIT_LOGS_PUBSUB_TOPIC \
-    --compositeLineageTopic=projects/$PROJECT_ID/topics/$LINEAGE_OUTPUT_PUBSUB_TOPIC"
+    --gcpTempLocation="gs://${TEMP_GCS_BUCKET}/temp/" \
+    --stagingLocation="gs://${TEMP_GCS_BUCKET}/staging/" \
+    --workerMachineType=n1-standard-4 \
+    --region="${REGION_ID}" \
+    --lineageTableName="${PROJECT_ID}:${DATASET_ID}.${LINEAGE_TABLE_ID}" \
+    --tagTemplateId="${LINEAGE_TAG_TEMPLATE_ID}" \
+    --pubsubTopic="projects/${PROJECT_ID}/topics/${AUDIT_LOGS_PUBSUB_TOPIC}" \
+    --compositeLineageTopic="projects/${PROJECT_ID}/topics/${LINEAGE_OUTPUT_PUBSUB_TOPIC}"
     ```
