@@ -106,33 +106,35 @@ gcloud pubsub topics create $LINEAGE_OUTPUT_PUBSUB_TOPIC --project $PROJECT_ID
     ```
 2. Build the pipeline using Cloud Build
     ```shell
-    gcloud builds submit \
-    --substitutions _JAR_GCS_LOCATION="${TEMP_GCS_BUCKET}/jars" \
+    gcloud builds submit --config=cloudbuild.yaml \
+    --substitutions _TEMPLATE_IMAGE_TAG="${LINEAGE_EXTRACTION_TEMPLATE_IMAGE}",_MAIN_CLASS="${EXTRACTION_MAIN_CLASS}" \
     --project "${PROJECT_ID}"
     ```
 
-3. Download the JAR file:
+
+3. Create Dataflow flex template:
 
     ```shell
-    gsutil cp "gs://${TEMP_GCS_BUCKET}/jars/bigquery-data-lineage-bundled-0.1-SNAPSHOT.jar" .
+    gcloud dataflow flex-template build \
+    "${LINEAGE_TEMPLATE_GCS_PATH}" \
+    --project="${PROJECT_ID}" \
+    --image="${LINEAGE_EXTRACTION_TEMPLATE_IMAGE}" \
+    --metadata-file="lineage-extraction-metadata.json" \
+    --sdk-language="JAVA"
     ```
 
 4. Launch the pipeline:
 
-    ```shell
-    EXTRACTION_MAIN_CLASS=""
-      export MAIN_CLASS="com.google.cloud.solutions.datalineage.LineageExtractionPipeline"
-      
-    java -cp bigquery-data-lineage-bundled-0.1-SNAPSHOT.jar "${MAIN_CLASS}" \
-    --streaming=true \
+    ```shell  
+    gcloud dataflow flex-template run \
+    "bigquery-lineage-extraction-$(date +%Y%m%d%H%M%S)" \
+    --template-file-gcs-location="${LINEAGE_TEMPLATE_GCS_PATH}" \
     --project="${PROJECT_ID}" \
-    --runner=DataflowRunner \
-    --gcpTempLocation="gs://${TEMP_GCS_BUCKET}/temp/" \
-    --stagingLocation="gs://${TEMP_GCS_BUCKET}/staging/" \
-    --workerMachineType=n1-standard-4 \
     --region="${REGION_ID}" \
-    --lineageTableName="${PROJECT_ID}:${DATASET_ID}.${LINEAGE_TABLE_ID}" \
-    --tagTemplateId="${LINEAGE_TAG_TEMPLATE_ID}" \
-    --pubsubTopic="projects/${PROJECT_ID}/topics/${AUDIT_LOGS_PUBSUB_TOPIC}" \
-    --compositeLineageTopic="projects/${PROJECT_ID}/topics/${LINEAGE_OUTPUT_PUBSUB_TOPIC}"
+    --temp-location="gs://${TEMP_GCS_BUCKET}/temp/" \
+    --staging-location="gs://${TEMP_GCS_BUCKET}/staging/" \
+    --parameters=lineageTableName="${PROJECT_ID}:${DATASET_ID}.${LINEAGE_TABLE_ID}" \
+    --parameters=tagTemplateId="${LINEAGE_TAG_TEMPLATE_ID}" \
+    --parameters=pubsubTopic="projects/${PROJECT_ID}/topics/${AUDIT_LOGS_PUBSUB_TOPIC}" \
+    --parameters=compositeLineageTopic="projects/${PROJECT_ID}/topics/${LINEAGE_OUTPUT_PUBSUB_TOPIC}"
     ```
