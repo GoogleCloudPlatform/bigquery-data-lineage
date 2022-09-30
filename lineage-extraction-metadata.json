@@ -1,0 +1,35 @@
+
+{
+  "name": "BigQuery Data Lineage extraction",
+  "description": "Identifies Data lineage for BigQuery SQL queries",
+  "parameters": [
+    {
+      "name": "lineageTableName",
+      "label": "BigQuery Lineage Table",
+      "helpText": "Fully qualified BQ table name to store lineage.\nFormat:\nproject-id:dataset_id.table_id"
+    },
+    {
+      "name": "pubsubTopic",
+      "label": "AuditLog Pubsub Topic",
+      "helpText": "The name of topic to listen for audit-logs"
+    },
+    {
+      "name": "tagTemplateId",
+      "label": "Data Catalog tag-template Id",
+      "helpText": "The Data Catalog Tag Template Id registered for Lineage",
+      "isOptional": true
+    },
+    {
+      "name": "compositeLineageTopic",
+      "label": "Composite Lineage output Pubsub Topic",
+      "helpText": "Pub/Sub topic for publishing processed Lineage",
+      "isOptional": true
+    },
+    {
+      "name": "nonMonitoredTables",
+      "label": "BigQuery tables to omit from Extraction",
+      "helpText": "List of BigQuery tables to omit from observation",
+      "isOptional": true
+    }
+  ]
+}
