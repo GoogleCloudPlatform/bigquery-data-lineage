@@ -25,11 +25,11 @@
   <version>0.1-SNAPSHOT</version>
 
   <properties>
-    <beam.version>2.35.0</beam.version>
-    <cloud-libraries-bom.version>24.2.0</cloud-libraries-bom.version>
+    <beam.version>2.41.0</beam.version>
+    <cloud-libraries-bom.version>25.1.0</cloud-libraries-bom.version>
     <flogger.version>0.7.4</flogger.version>
-    <guava.version>31.0.1-jre</guava.version>
-    <jsonassert.version>1.5.0</jsonassert.version>
+    <guava.version>31.1-jre</guava.version>
+    <jsonassert.version>1.5.1</jsonassert.version>
     <junit.version>4.13.2</junit.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-exec-plugin.version>1.6.0</maven-exec-plugin.version>
@@ -37,14 +37,14 @@
     <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <protobuf.version>3.19.3</protobuf.version>
-    <slf4j.version>1.7.32</slf4j.version>
+    <protobuf.version>3.21.6</protobuf.version>
+    <slf4j.version>2.0.1</slf4j.version>
     <sonar.projectKey>GoogleCloudPlatform_bigquery-data-lineage</sonar.projectKey>
     <sonar.organization>googlecloudplatform</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.version>3.6.1.1688</sonar.version>
     <sonar.version>3.6.1.1688</sonar.version>
-    <zetasql.version>2021.09.1</zetasql.version>
+    <zetasql.version>2022.08.1</zetasql.version>
     <protoc-jar-maven-plugin.version>3.11.4</protoc-jar-maven-plugin.version>
     <truth.version>1.1.3</truth.version>
   </properties>
@@ -79,13 +79,13 @@
     <dependency>
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value-annotations</artifactId>
-      <version>1.7</version>
+      <version>1.9</version>
     </dependency>
 
     <dependency>
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value</artifactId>
-      <version>1.7</version>
+      <version>1.9</version>
     </dependency>
 
     <!-- Protobuf library -->
@@ -99,7 +99,7 @@
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
-      <version>2.8.9</version>
+      <version>2.9.0</version>
     </dependency>
 
     <!-- Apache Commons Lang for String processing -->
@@ -113,7 +113,7 @@
     <dependency>
       <groupId>com.jayway.jsonpath</groupId>
       <artifactId>json-path</artifactId>
-      <version>2.6.0</version>
+      <version>2.7.0</version>
     </dependency>
 
     <!-- ZetaSQL SQL Parsing Library -->
