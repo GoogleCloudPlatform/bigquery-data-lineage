@@ -125,7 +125,7 @@ public abstract class FakeApiCallContext implements ApiCallContext {
 
     public abstract Builder setStreamIdleTimeout(@Nullable Duration newStreamIdleTimeout);
 
-    public abstract Builder setExtraHeaders(@Nullable Map<String, List<String>> newExtraHeaders);
+    public abstract Builder setExtraHeaders(Map<String, List<String>> newExtraHeaders);
 
     public abstract Builder setRetrySettings(RetrySettings retrySettings);
 
