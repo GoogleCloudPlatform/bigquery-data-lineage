@@ -1,0 +1,23 @@
+{
+  "name": "BigQuery Data Lineage Policy tag propagation pipeline",
+  "description": "Automatically adds Column-level ACLs on created tables using Data Lineage signals",
+  "parameters": [
+    {
+      "name": "lineagePubSubTopic",
+      "label": "Composite Lineage topic",
+      "helpText": "The name of Pubsub topic to listen for Data Lineage"
+    },
+    {
+      "name": "monitoredPolicyTags",
+      "label": "Propagated Policy Tags",
+      "helpText": "The Data Catalog Policy Tags to apply on newly created tables based on lineage",
+      "isOptional": true
+    },
+    {
+      "name": "monitoredCatalogTags",
+      "label": "Monitored Catalog Tags",
+      "helpText": "Data Catalog Tag-Template Ids to propagate to created tables based on lineage",
+      "isOptional": true
+    }
+  ]
+}
