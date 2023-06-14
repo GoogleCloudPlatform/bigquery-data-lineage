@@ -28,7 +28,7 @@
     <beam.version>2.41.0</beam.version>
     <cloud-libraries-bom.version>25.1.0</cloud-libraries-bom.version>
     <flogger.version>0.7.4</flogger.version>
-    <guava.version>31.1-jre</guava.version>
+    <guava.version>32.0.0-jre</guava.version>
     <jsonassert.version>1.5.1</jsonassert.version>
     <junit.version>4.13.2</junit.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
