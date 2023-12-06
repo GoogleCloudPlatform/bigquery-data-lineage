@@ -44,7 +44,7 @@
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.version>3.6.1.1688</sonar.version>
     <sonar.version>3.6.1.1688</sonar.version>
-    <zetasql.version>2022.08.1</zetasql.version>
+    <zetasql.version>2023.11.1</zetasql.version>
     <protoc-jar-maven-plugin.version>3.11.4</protoc-jar-maven-plugin.version>
     <truth.version>1.1.5</truth.version>
   </properties>
