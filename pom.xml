@@ -27,7 +27,7 @@
   <properties>
     <beam.version>2.41.0</beam.version>
     <cloud-libraries-bom.version>25.1.0</cloud-libraries-bom.version>
-    <flogger.version>0.7.4</flogger.version>
+    <flogger.version>0.8</flogger.version>
     <guava.version>32.1.3-jre</guava.version>
     <jsonassert.version>1.5.1</jsonassert.version>
     <junit.version>4.13.2</junit.version>
